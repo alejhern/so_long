@@ -88,8 +88,8 @@ void				update_tile_size(t_game *game);
 t_pacman			*create_pacman(t_game *game);
 
 // Declarations from ghost.c
-void				free_ghost(t_ghost *ghost);
-t_ghost				create_ghost(t_game *game, char key_in_map);
+void				free_ghosts(t_ghost **ghost);
+t_ghost				**create_ghosts(t_game *game, int num_ghosts);
 
 // Declarations from map.c
 void				get_map(t_game *game, char *path);
