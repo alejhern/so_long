@@ -31,11 +31,13 @@ CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) -I $(MLX42_INC)
 
 LDFLAGS = -L$(LIB_DIR) -lft -L$(MLX42_DIR)/build -lmlx42 -ldl -lglfw -lm -lpthread
 
+RESOURCES_WWW = "https://drive.google.com/uc?export=download&id=1fUfL2GhSGRLVCnpXsm_pUwFXT1rwhXTW"
+
 # **************************************************************************** #
 #                                 RULES                                        #
 # **************************************************************************** #
 
-all: $(LIBFT) $(MLX42_LIB) $(NAME)
+all: $(LIBFT) $(MLX42_LIB) $(NAME) download_resources
 
 $(NAME): $(OBJ) $(LIBFT) $(MLX42_LIB)
 	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(NAME)
@@ -55,6 +57,14 @@ $(MLX42_LIB):
 	fi
 	@cmake -S $(MLX42_DIR) -B $(MLX42_DIR)/build
 	@make -C $(MLX42_DIR)/build
+
+download_resources:
+	@if [ ! -d "sprites" ] || [ ! -d "routes" ]; then \
+		echo "Downloading the sprites and routes directories..."; \
+		wget $(RESOURCES_WWW) -O so_long_resources.tar > /dev/null 2>&1; \
+		tar -xpvf so_long_resources.tar > /dev/null; \
+		rm -f so_long_resources.tar; \
+	fi
 
 clean:
 	@make -C $(LIB_DIR) clean
