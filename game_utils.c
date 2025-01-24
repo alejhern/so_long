@@ -12,17 +12,17 @@
 
 #include "so_long.h"
 
-static void     free_array_texrures(mlx_texture_t **texture)
+static void	free_array_texrures(mlx_texture_t **texture)
 {
-    int index;
+	int	index;
 
-    index = -1;
-    while (texture[++index])
-    {
-        mlx_delete_texture(texture[index]);
-        free(texture[index]);
-    }
-    free(texture);
+	index = -1;
+	while (texture[++index])
+	{
+		mlx_delete_texture(texture[index]);
+		free(texture[index]);
+	}
+	free(texture);
 }
 
 mlx_texture_t	**get_sprites(int fd, int limit)
@@ -35,18 +35,18 @@ mlx_texture_t	**get_sprites(int fd, int limit)
 	if (!sprites)
 		return (NULL);
 	index = -1;
-    while (true && ++index < limit)
-    {
-	    path = get_next_line(fd);
-        if (!path)
-            break ;
+	while (true && ++index < limit)
+	{
+		path = get_next_line(fd);
+		if (!path)
+			break ;
 		if (ft_strchr(path, '\n'))
 			ft_strchr(path, '\n')[0] = '\0';
 		sprites[index] = mlx_load_png(path);
 		free(path);
-        if (!sprites[index])
-			return (free_array_texrures(sprites), NULL);   
-    }
+		if (!sprites[index])
+			return (free_array_texrures(sprites), NULL);
+	}
 	return (sprites);
 }
 
