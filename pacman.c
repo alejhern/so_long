@@ -69,14 +69,12 @@ t_pacman	*create_pacman(t_game *game)
 		return (free_pacman(pacman), NULL);
 	pacman->alive = get_sprites(fd, 3);
 	close(fd);
-	if (!pacman->alive)
-		return (free_pacman(pacman), NULL);
 	fd = open("routes/pacman-dead.txt", O_RDONLY);
 	if (fd == -1)
 		return (free_pacman(pacman), NULL);
 	pacman->dead = get_sprites(fd, 10);
 	close(fd);
-	if (!pacman->dead)
+	if (!pacman->alive || !pacman->dead)
 		return (free_pacman(pacman), NULL);
 	render_pacman(game, pacman);
 	return (pacman);
