@@ -18,11 +18,9 @@ static void	free_array_texrures(mlx_texture_t **texture)
 
 	index = -1;
 	while (texture[++index])
-	{
 		mlx_delete_texture(texture[index]);
-		free(texture[index]);
-	}
 	free(texture);
+	texture = NULL;
 }
 
 mlx_texture_t	**get_sprites(int fd, int limit)
@@ -47,6 +45,8 @@ mlx_texture_t	**get_sprites(int fd, int limit)
 		if (!sprites[index])
 			return (free_array_texrures(sprites), NULL);
 	}
+	if (sprites)
+		sprites[--index] = NULL;
 	return (sprites);
 }
 
@@ -94,7 +94,7 @@ t_pos	render_object(t_game *game, char key_in_map, mlx_texture_t *texture)
 		pos.x = -1;
 		while (++pos.x < game->cols)
 		{
-			if (game->map[pos.y][pos.x].key == key_in_map)
+			if (game->map[pos.y][pos.x].key == key_in_map && !game->map[pos.y][pos.x].image)
 			{
 				regenerate_sprites(game, texture, pos);
 				return (pos);

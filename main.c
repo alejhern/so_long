@@ -36,11 +36,9 @@ void	init_game(t_game *game)
 	game->map_textures = get_sprites(fd, 3);
 	close(fd);
 	render_map(game);
-    pacman = create_pacman(game);
-    if (pacman == NULL)
-        return ;
     ghost = create_ghosts(game, 4);
-    if (ghost == NULL)
+    pacman = create_pacman(game);
+    if (!pacman || !ghost)
         return ;
 }
 

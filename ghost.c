@@ -17,8 +17,8 @@ void	free_ghosts(t_ghost **ghosts)
 	int	index_gh;
 	int	index;
 
-	index_gh = -1;
-	while (ghosts[++index_gh])
+	index_gh = 0;
+	while (ghosts[index_gh])
 	{
 		index = -1;
 		if (ghosts[index_gh]->ghost)
@@ -32,7 +32,7 @@ void	free_ghosts(t_ghost **ghosts)
 		if (ghosts[index_gh]->scared)
 			while (ghosts[index_gh]->scared[++index])
 				mlx_delete_texture(ghosts[index_gh]->scared[index]);
-		free(ghosts[index_gh]);
+		free(ghosts[index_gh++]);
 	}
 	free(ghosts);
 	ghosts = NULL;
@@ -55,6 +55,7 @@ static void	get_ghost_sprites(t_ghost *ghost, int fd_gh)
 	fd = open("routes/ghost-scared.txt", O_RDONLY);
 	if (fd == -1)
 		return ;
+	ghost->scared = get_sprites(fd, 2);
 }
 
 static void	new_ghost_constructor(t_ghost *ghost)
@@ -86,9 +87,9 @@ t_ghost	**create_ghosts(t_game *game, int num_ghosts)
 	fd = open("routes/ghosts.txt", O_RDONLY);
 	if (fd == -1)
 		return (NULL);
-	ghosts = malloc(sizeof(t_ghost *) * num_ghosts);
+	ghosts = ft_calloc(num_ghosts + 1, sizeof(t_ghost *));
 	index = -1;
-	while (ghosts && ghosts[++index])
+	while (ghosts && ++index < num_ghosts)
 	{
 		ghosts[index] = malloc(sizeof(t_ghost));
 		if (!ghosts[index])
