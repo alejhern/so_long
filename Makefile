@@ -16,7 +16,7 @@
 
 NAME = so_long
 
-SRCS = main.c
+SRCS = main.c game_utils.c map.c pacman.c ghost.c screen_utils.c
 OBJ = $(SRCS:.c=.o)
 
 LIB_DIR = libft/
@@ -26,7 +26,7 @@ MLX42_DIR = MLX42/
 MLX42_LIB = $(MLX42_DIR)build/libmlx42.a
 MLX42_INC = $(MLX42_DIR)/include
 
-CC = cc
+CC = cc -g
 CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) -I $(MLX42_INC)
 
 LDFLAGS = -L$(LIB_DIR) -lft -L$(MLX42_DIR)/build -lmlx42 -ldl -lglfw -lm -lpthread
