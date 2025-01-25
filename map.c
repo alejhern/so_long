@@ -6,12 +6,23 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/19 16:04:16 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/19 16:04:18 by amhernandez      ###   ########.fr       */
+/*   Updated: 2025/01/25 04:07:57 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+/*
+void	free_map(t_cell **map)
+{
+	t_pos	pos;
 
+	pos.y = -1;
+	while (++pos.y < game->rows)
+	{
+
+	}
+}
+*/
 void	render_map(t_game *game)
 {
 	t_pos	pos;
@@ -45,13 +56,13 @@ static t_cell	**get_map_cell(t_game *game, char **map_str)
 	t_pos	pos;
 	t_cell	**map;
 
-	map = malloc(sizeof(t_cell *) * game->rows);
+	map = ft_calloc((game->rows + 1), sizeof(t_cell *));
 	if (!map)
 		return (NULL);
 	pos.y = -1;
 	while (++pos.y < game->rows)
 	{
-		map[pos.y] = malloc(sizeof(t_cell) * game->cols);
+		map[pos.y] = ft_calloc((game->cols + 1), sizeof(t_cell));
 		if (!map[pos.y])
 			return (ft_free_array((void ***)&map), NULL);
 		pos.x = -1;

@@ -6,16 +6,18 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 21:33:11 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/17 21:33:17 by amhernandez      ###   ########.fr       */
+/*   Updated: 2025/01/25 04:18:01 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static void	free_array_texrures(mlx_texture_t **texture)
+void	free_array_textures(mlx_texture_t **texture)
 {
 	int	index;
 
+	if (!texture)
+		return ;
 	index = -1;
 	while (texture[++index])
 		mlx_delete_texture(texture[index]);
@@ -29,7 +31,7 @@ mlx_texture_t	**get_sprites(int fd, int limit)
 	int				index;
 	char			*path;
 
-	sprites = malloc(sizeof(mlx_texture_t *) * limit);
+	sprites = ft_calloc((limit + 1), sizeof(mlx_texture_t *));
 	if (!sprites)
 		return (NULL);
 	index = -1;
@@ -43,10 +45,8 @@ mlx_texture_t	**get_sprites(int fd, int limit)
 		sprites[index] = mlx_load_png(path);
 		free(path);
 		if (!sprites[index])
-			return (free_array_texrures(sprites), NULL);
+			return (free_array_textures(sprites), NULL);
 	}
-	if (sprites)
-		sprites[--index] = NULL;
 	return (sprites);
 }
 
@@ -94,7 +94,8 @@ t_pos	render_object(t_game *game, char key_in_map, mlx_texture_t *texture)
 		pos.x = -1;
 		while (++pos.x < game->cols)
 		{
-			if (game->map[pos.y][pos.x].key == key_in_map && !game->map[pos.y][pos.x].image)
+			if (game->map[pos.y][pos.x].key == key_in_map
+				&& !game->map[pos.y][pos.x].image)
 			{
 				regenerate_sprites(game, texture, pos);
 				return (pos);

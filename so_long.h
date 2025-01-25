@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 21:19:45 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/17 21:19:56 by amhernandez      ###   ########.fr       */
+/*   Updated: 2025/01/25 03:05:03 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ typedef struct s_pacman
 }					t_pacman;
 
 // Declarations from game_utils.c
+void				free_array_textures(mlx_texture_t **texture);
 mlx_texture_t		**get_sprites(int fd, int limit);
 t_pos				render_object(t_game *game, char key_in_map,
 						mlx_texture_t *texture);
@@ -85,6 +86,7 @@ void				window_resize_handler(int32_t width, int32_t height,
 						void *param);
 void				update_tile_size(t_game *game);
 // Declarations of pacman.c
+void				free_pacman(t_pacman *pacman);
 t_pacman			*create_pacman(t_game *game);
 
 // Declarations from ghost.c

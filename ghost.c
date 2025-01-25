@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 19:28:21 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/18 19:28:28 by amhernandez      ###   ########.fr       */
+/*   Updated: 2025/01/25 03:06:00 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,17 @@
 
 void	free_ghosts(t_ghost **ghosts)
 {
-	int	index_gh;
 	int	index;
 
-	index_gh = 0;
-	while (ghosts[index_gh])
+	if (!ghosts)
+		return ;
+	index = -1;
+	while (ghosts[++index])
 	{
-		index = -1;
-		if (ghosts[index_gh]->ghost)
-			while (ghosts[index_gh]->ghost[++index])
-				mlx_delete_texture(ghosts[index_gh]->ghost[index]);
-		index = -1;
-		if (ghosts[index_gh]->dead)
-			while (ghosts[index_gh]->dead[++index])
-				mlx_delete_texture(ghosts[index_gh]->dead[index]);
-		index = -1;
-		if (ghosts[index_gh]->scared)
-			while (ghosts[index_gh]->scared[++index])
-				mlx_delete_texture(ghosts[index_gh]->scared[index]);
-		free(ghosts[index_gh++]);
+		free_array_textures(ghosts[index]->ghost);
+		free_array_textures(ghosts[index]->dead);
+		free_array_textures(ghosts[index]->scared);
+		free(ghosts[index]);
 	}
 	free(ghosts);
 	ghosts = NULL;

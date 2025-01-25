@@ -6,30 +6,18 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 20:07:13 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/24 20:07:18 by amhernandez      ###   ########.fr       */
+/*   Updated: 2025/01/25 03:04:06 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static void	free_pacman(t_pacman *pacman)
+void	free_pacman(t_pacman *pacman)
 {
-	int	index;
-
-	if (pacman->alive)
-	{
-		index = -1;
-		while (pacman->alive[++index])
-			mlx_delete_texture(pacman->alive[index]);
-		free(pacman->alive);
-	}
-	if (pacman->dead)
-	{
-		index = -1;
-		while (pacman->dead[++index])
-			mlx_delete_texture(pacman->dead[index]);
-		free(pacman->dead);
-	}
+	if (!pacman)
+		return ;
+	free_array_textures(pacman->alive);
+	free_array_textures(pacman->dead);
 	free(pacman);
 	pacman = NULL;
 }
