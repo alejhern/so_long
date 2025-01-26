@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 21:33:11 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/25 04:18:01 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 06:58:19 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,25 @@ void	free_array_textures(mlx_texture_t **texture)
 		mlx_delete_texture(texture[index]);
 	free(texture);
 	texture = NULL;
+}
+
+void	clear_images(t_game *game)
+{
+	t_pos	pos;
+
+	pos.y = -1;
+	while (++pos.y < game->rows)
+	{
+		pos.x = -1;
+		while (++pos.x < game->cols)
+		{
+			if (game->map[pos.y][pos.x].image)
+			{
+				mlx_delete_image(game->mlx, game->map[pos.y][pos.x].image);
+				game->map[pos.y][pos.x].image = NULL;
+			}
+		}
+	}
 }
 
 mlx_texture_t	**get_sprites(int fd, int limit)
@@ -50,56 +69,36 @@ mlx_texture_t	**get_sprites(int fd, int limit)
 	return (sprites);
 }
 
-void	clear_images(t_game *game)
+mlx_image_t	*regenerate_sprite(t_game *game, mlx_texture_t *texture, t_pos pos)
 {
-	t_pos	pos;
-
-	pos.y = -1;
-	while (++pos.y < game->rows)
-	{
-		pos.x = -1;
-		while (++pos.x < game->cols)
-		{
-			if (game->map[pos.y][pos.x].image)
-			{
-				mlx_delete_image(game->mlx, game->map[pos.y][pos.x].image);
-				game->map[pos.y][pos.x].image = NULL;
-			}
-		}
-	}
-}
-
-static void	regenerate_sprites(t_game *game, mlx_texture_t *texture, t_pos pos)
-{
+	mlx_image_t	*img;
 	int			draw_x;
 	int			draw_y;
-	mlx_image_t	*img;
 
+	img = mlx_texture_to_image(game->mlx, texture);
+	if (!img)
+		return (NULL);
 	draw_x = game->x_offset + pos.x * game->tile_size;
 	draw_y = game->y_offset + pos.y * game->tile_size;
-	img = mlx_texture_to_image(game->mlx, texture);
-	if (game->map[pos.x][pos.y].image)
-		mlx_delete_image(game->mlx, game->map[pos.y][pos.x].image);
-	game->map[pos.y][pos.x].image = img;
 	mlx_image_to_window(game->mlx, img, draw_x, draw_y);
+	return (img);
 }
 
-t_pos	render_object(t_game *game, char key_in_map, mlx_texture_t *texture)
+t_pos	get_init_pos(t_game *game, char key_in_map, int ignore)
 {
 	t_pos	pos;
+	int		ignored;
 
 	pos.y = -1;
+	ignored = -1;
 	while (++pos.y < game->rows)
 	{
 		pos.x = -1;
 		while (++pos.x < game->cols)
 		{
 			if (game->map[pos.y][pos.x].key == key_in_map
-				&& !game->map[pos.y][pos.x].image)
-			{
-				regenerate_sprites(game, texture, pos);
+				&& ++ignored == ignore)
 				return (pos);
-			}
 		}
 	}
 	return (pos);
