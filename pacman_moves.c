@@ -12,7 +12,7 @@
 
 #include "so_long.h"
 
-int	is_valid_move(t_game *game, t_pos pos)
+int	acces_cell(t_game *game, t_pos pos)
 {
 	if (pos.x < 0 || pos.y < 0 || pos.x >= game->cols || pos.y >= game->rows)
 		return (0);
@@ -29,11 +29,10 @@ void	move_pacman(t_game *game, int dx, int dy)
 	old_pos = game->pacman->pos;
 	new_pos.x = old_pos.x + dx;
 	new_pos.y = old_pos.y + dy;
-	if (is_valid_move(game, new_pos))
+	if (acces_cell(game, new_pos))
 	{
 		mlx_set_instance_depth(&game->pacman->image->instances[0], -1);
 		game->map[old_pos.y][old_pos.x].is_pacman = 0;
-		game->pacman->pos = new_pos;
 		if (game->map[new_pos.y][new_pos.x].is_pill
 			|| game->map[new_pos.y][new_pos.x].is_mega_pill)
 			mlx_delete_image(game->mlx, game->map[new_pos.y][new_pos.x].image);
@@ -43,6 +42,7 @@ void	move_pacman(t_game *game, int dx, int dy)
 		game->pacman->image->instances[0].x = draw_x;
 		game->pacman->image->instances[0].y = draw_y;
 		mlx_set_instance_depth(&game->pacman->image->instances[0], 0);
+		game->pacman->pos = new_pos;
 		ft_printf("MOVE COUNT --> %d\n", ++game->count_move);
 	}
 }
@@ -64,5 +64,5 @@ void	key_handler(mlx_key_data_t keydata, void *param)
 		move_pacman(game, 1, 0);
 	else if (keydata.key == MLX_KEY_ESCAPE)
 		mlx_close_window(game->mlx);
-	game->runing = true;
+	game->running = true;
 }
