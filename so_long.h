@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 21:19:45 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/26 11:01:27 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 14:02:27 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ typedef struct s_game
 	int				tile_size;
 	int				x_offset;
 	int				y_offset;
+	int				runing;
+	int				count_move;
 	mlx_texture_t	**map_textures;
 	t_pacman		*pacman;
 	t_ghost			**ghosts;

@@ -6,7 +6,7 @@
 /*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 02:00:27 by alejhern          #+#    #+#             */
-/*   Updated: 2025/01/26 09:25:01 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 13:53:31 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	move_pacman(t_game *game, int dx, int dy)
 		game->pacman->image->instances[0].x = draw_x;
 		game->pacman->image->instances[0].y = draw_y;
 		mlx_set_instance_depth(&game->pacman->image->instances[0], 0);
+		ft_printf("MOVE COUNT --> %d\n", ++game->count_move);
 	}
 }
 
@@ -63,4 +64,5 @@ void	key_handler(mlx_key_data_t keydata, void *param)
 		move_pacman(game, 1, 0);
 	else if (keydata.key == MLX_KEY_ESCAPE)
 		mlx_close_window(game->mlx);
+	game->runing = true;
 }

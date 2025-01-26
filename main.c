@@ -6,7 +6,7 @@
 /*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/26 07:05:18 by alejhern          #+#    #+#             */
-/*   Updated: 2025/01/26 08:41:36 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 13:55:17 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ void	init_game(t_game *game)
 	game->pacman = create_pacman(game);
 	if (!game->pacman)
 		return ;
+	game->count_move = 0;
+	game->runing = false;
 	mlx_key_hook(game->mlx, key_handler, game);
 	//mlx_resize_hook(game.mlx, window_resize_handler, &game);
 	mlx_loop(game->mlx);
