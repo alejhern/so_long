@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 19:28:21 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/25 03:06:00 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 03:26:31 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ static void	new_ghost_constructor(t_ghost *ghost)
 	ghost->is_dead = 0;
 	ghost->is_scared = 0;
 	ghost->status_cell = '0';
-	ghost->speed = 1;
+	ghost->direction = 'R';
 	ghost->ghost = NULL;
 	ghost->dead = NULL;
 	ghost->scared = NULL;

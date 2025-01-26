@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 21:19:45 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/25 03:05:03 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 03:22:30 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@
 # define TILE_SIZE 32
 # define MIN_TILE_SIZE 10
 
+typedef struct s_pos
+{
+	int				x;
+	int				y;
+}					t_pos;
+
 typedef struct s_cell
 {
 	char			key;
@@ -32,24 +38,6 @@ typedef struct s_cell
 	mlx_image_t		*image;
 }					t_cell;
 
-typedef struct s_game
-{
-	mlx_t			*mlx;
-	t_cell			**map;
-	int				rows;
-	int				cols;
-	int				tile_size;
-	int				x_offset;
-	int				y_offset;
-	mlx_texture_t	**map_textures;
-}					t_game;
-
-typedef struct s_pos
-{
-	int				x;
-	int				y;
-}					t_pos;
-
 typedef struct s_ghost
 {
 	char			key_in_map;
@@ -57,7 +45,7 @@ typedef struct s_ghost
 	int				is_scared;
 	int				is_dead;
 	char			status_cell;
-	int				speed;
+	char			direction;
 	mlx_texture_t	**ghost;
 	mlx_texture_t	**scared;
 	mlx_texture_t	**dead;
@@ -68,12 +56,25 @@ typedef struct s_pacman
 	char			key_in_map;
 	t_pos			pos;
 	int				lives;
-	int				speed;
 	int				is_dead;
 	char			direction;
 	mlx_texture_t	**alive;
 	mlx_texture_t	**dead;
 }					t_pacman;
+
+typedef struct s_game
+{
+	mlx_t			*mlx;
+	t_cell			**map;
+	int				rows;
+	int				cols;
+	int				tile_size;
+	int				x_offset;
+	int				y_offset;
+	mlx_texture_t	**map_textures;
+	t_pacman		*pacman;
+	t_ghost			**ghosts;
+}					t_game;
 
 // Declarations from game_utils.c
 void				free_array_textures(mlx_texture_t **texture);

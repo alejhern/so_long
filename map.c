@@ -6,23 +6,12 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/19 16:04:16 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/25 04:07:57 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/25 23:52:05 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-/*
-void	free_map(t_cell **map)
-{
-	t_pos	pos;
 
-	pos.y = -1;
-	while (++pos.y < game->rows)
-	{
-
-	}
-}
-*/
 void	render_map(t_game *game)
 {
 	t_pos	pos;
