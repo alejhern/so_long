@@ -31,10 +31,12 @@ void	init_game(t_game *game)
 	game->pacman = create_pacman(game);
 	if (!game->pacman)
 		return ;
+	game->timer = 0;
 	game->count_move = 0;
-	game->runing = false;
+	game->running = false;
+	mlx_loop_hook(game->mlx, game_loop, game);
 	mlx_key_hook(game->mlx, key_handler, game);
-	//mlx_resize_hook(game.mlx, window_resize_handler, &game);
+	// mlx_resize_hook(game.mlx, window_resize_handler, &game);
 	mlx_loop(game->mlx);
 }
 
