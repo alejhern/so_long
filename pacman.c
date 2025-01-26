@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 20:07:13 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/26 07:03:23 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 11:02:29 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ static void	new_pacman_constructor(t_pacman *pacman, t_game *game)
 	pacman->pos = pacman->init_pos;
 	pacman->lives = 3;
 	pacman->direction = 'R';
-	pacman->is_power_up = 0;
-	pacman->is_dead = false;
+	pacman->state = WAITING;
 	pacman->alive = NULL;
 	pacman->dead = NULL;
 	pacman->image = NULL;

@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 21:19:45 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/26 06:58:05 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 11:01:27 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,23 @@ typedef struct s_cell
 	mlx_image_t		*image;
 }					t_cell;
 
+typedef enum e_state
+{
+	WAITING,
+	ACTIVE,
+	SCARED,
+	DEAD,
+	POWER_UP
+}					t_states;
+
 typedef struct s_ghost
 {
 	char			key_in_map;
 	t_pos			pos;
 	t_pos			init_pos;
-	int				is_scared;
-	int				is_dead;
-	char			status_cell;
+	int				delay;
 	char			direction;
+	t_states		state;
 	mlx_texture_t	**ghost;
 	mlx_texture_t	**scared;
 	mlx_texture_t	**dead;
@@ -59,9 +67,8 @@ typedef struct s_pacman
 	t_pos			pos;
 	t_pos			init_pos;
 	int				lives;
-	int				is_dead;
 	char			direction;
-	int				is_power_up;
+	t_states		state;
 	mlx_texture_t	**alive;
 	mlx_texture_t	**dead;
 	mlx_image_t		*image;

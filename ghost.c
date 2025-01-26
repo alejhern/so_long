@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/18 19:28:21 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/26 07:00:37 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 10:28:51 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,8 @@ static void	new_ghost_constructor(t_ghost *ghost, t_game *game, int index)
 	ghost->key_in_map = 'G';
 	ghost->init_pos = get_init_pos(game, ghost->key_in_map, index);
 	ghost->pos = ghost->init_pos;
-	ghost->is_dead = 0;
-	ghost->is_scared = 0;
-	ghost->status_cell = '0';
+	ghost->delay = 30 * (index + 1);
+	ghost->state = WAITING;
 	ghost->direction = 'R';
 	ghost->ghost = NULL;
 	ghost->dead = NULL;
