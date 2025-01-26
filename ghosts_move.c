@@ -12,28 +12,28 @@
 
 #include "so_long.h"
 
-t_pos	best_move(t_game *game, t_pos ini, t_pos obj)
+t_pos	best_move(t_game *game, t_ghost *gh, t_pos ini, t_pos obj)
 {
 	t_pos	move;
 
 	move = (t_pos){0, 0};
-	if (obj.y > ini.y && acces_cell(game, (t_pos){ini.x, ini.y + 1}))
+	if (obj.y > ini.y && acces_cell(game, gh, (t_pos){ini.x, ini.y + 1}))
 		move.y = 1;
-	else if (obj.y < ini.y && acces_cell(game, (t_pos){ini.x, ini.y - 1}))
+	else if (obj.y < ini.y && acces_cell(game, gh, (t_pos){ini.x, ini.y - 1}))
 		move.y = -1;
-	else if (obj.x > ini.x && acces_cell(game, (t_pos){ini.x + 1, ini.y}))
+	else if (obj.x > ini.x && acces_cell(game, gh, (t_pos){ini.x + 1, ini.y}))
 		move.x = 1;
-	else if (obj.x < ini.x && acces_cell(game, (t_pos){ini.x - 1, ini.y}))
+	else if (obj.x < ini.x && acces_cell(game, gh, (t_pos){ini.x - 1, ini.y}))
 		move.x = -1;
 	if (move.x == 0 && move.y == 0)
 	{
-		if (acces_cell(game, (t_pos){ini.x + 1, ini.y}))
+		if (acces_cell(game, gh, (t_pos){ini.x + 1, ini.y}))
 			move.x = 1;
-		else if (acces_cell(game, (t_pos){ini.x, ini.y + 1}))
+		else if (acces_cell(game, gh, (t_pos){ini.x, ini.y + 1}))
 			move.y = 1;
-		else if (acces_cell(game, (t_pos){ini.x, ini.y - 1}))
+		else if (acces_cell(game, gh, (t_pos){ini.x, ini.y - 1}))
 			move.y = -1;
-		else if (acces_cell(game, (t_pos){ini.x - 1, ini.y}))
+		else if (acces_cell(game, gh, (t_pos){ini.x - 1, ini.y}))
 			move.x = -1;
 	}
 	return (move);
@@ -47,7 +47,7 @@ void	move_ghost(t_game *game, t_ghost *ghost)
 	int		draw_y;
 
 	old_pos = ghost->pos;
-	new_pos = best_move(game, old_pos, game->pacman->pos);
+	new_pos = best_move(game, ghost, old_pos, game->pacman->pos);
 	new_pos = ft_pos_add(old_pos, new_pos);
 	mlx_set_instance_depth(&ghost->image->instances[0], -1);
 	game->map[old_pos.y][old_pos.x].is_ghost = 0;
@@ -58,6 +58,7 @@ void	move_ghost(t_game *game, t_ghost *ghost)
 	ghost->image->instances[0].y = draw_y;
 	mlx_set_instance_depth(&ghost->image->instances[0], 0);
 	ghost->pos = new_pos;
+	ghost->prev_pos = old_pos;
 }
 
 void	move_ghosts(t_game *game, int current_time)

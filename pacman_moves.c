@@ -12,10 +12,13 @@
 
 #include "so_long.h"
 
-int	acces_cell(t_game *game, t_pos pos)
+int	acces_cell(t_game *game, t_ghost *ghost, t_pos pos)
 {
 	if (pos.x < 0 || pos.y < 0 || pos.x >= game->cols || pos.y >= game->rows)
 		return (0);
+	if (ghost)
+		if (ft_pos_cmp(pos, ghost->prev_pos))
+			return (0);
 	return (!game->map[pos.y][pos.x].is_wall);
 }
 
@@ -29,7 +32,7 @@ void	move_pacman(t_game *game, int dx, int dy)
 	old_pos = game->pacman->pos;
 	new_pos.x = old_pos.x + dx;
 	new_pos.y = old_pos.y + dy;
-	if (acces_cell(game, new_pos))
+	if (acces_cell(game, NULL, new_pos))
 	{
 		mlx_set_instance_depth(&game->pacman->image->instances[0], -1);
 		game->map[old_pos.y][old_pos.x].is_pacman = 0;

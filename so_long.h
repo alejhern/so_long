@@ -46,6 +46,7 @@ typedef struct s_ghost
 	char			key_in_map;
 	t_pos			pos;
 	t_pos			init_pos;
+	t_pos			prev_pos;
 	int				delay;
 	char			direction;
 	t_states		state;
@@ -103,11 +104,12 @@ void				free_pacman(mlx_t *mlx, t_pacman *pacman);
 t_pacman			*create_pacman(t_game *game);
 
 // Declarations of pacman_move.c
-int					acces_cell(t_game *game, t_pos pos);
+int					acces_cell(t_game *game, t_ghost *ghost, t_pos pos);
 void				key_handler(mlx_key_data_t keydata, void *param);
 
 // Declarations from ghosts_move.c
 void				game_loop(void *param);
+
 // Declarations from ghost.c
 void				free_ghosts(mlx_t *mlx, t_ghost **ghost);
 t_ghost				**create_ghosts(t_game *game, int num_ghosts);
