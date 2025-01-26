@@ -11,62 +11,80 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
-#include <time.h>
 
-// Generar un movimiento aleatorio
-t_pos	random_move(void)
-{
-	t_pos	moves[] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
-	return (moves[rand() % 4]); // Elegir aleatoriamente una dirección
-}
-
-// Mover a un fantasma
-void	move_ghost(t_game *game, t_ghost *ghost)
+t_pos	best_move(t_game *game, t_pos ini, t_pos obj)
 {
 	t_pos	move;
-	int		new_x;
-	int		new_y;
 
-	move = random_move();
-	new_x = ghost->pos.x + move.x;
-	new_y = ghost->pos.y + move.y;
-	if (is_valid_move(game, new_x, new_y))
+	move = (t_pos){0, 0};
+	if (obj.y > ini.y && acces_cell(game, (t_pos){ini.x, ini.y + 1}))
+		move.y = 1;
+	else if (obj.y < ini.y && acces_cell(game, (t_pos){ini.x, ini.y - 1}))
+		move.y = -1;
+	else if (obj.x > ini.x && acces_cell(game, (t_pos){ini.x + 1, ini.y}))
+		move.x = 1;
+	else if (obj.x < ini.x && acces_cell(game, (t_pos){ini.x - 1, ini.y}))
+		move.x = -1;
+	if (move.x == 0 && move.y == 0)
 	{
-		// Actualizar mapa y posición lógica
-		game->map[ghost->pos.y][ghost->pos.x].is_ghost = 0;
-		ghost->pos.x = new_x;
-		ghost->pos.y = new_y;
-		game->map[new_y][new_x].is_ghost = 1;
-		// Redibujar al fantasma
-		mlx_image_to_window(game->mlx, ghost->ghost[0], new_x * game->tile_size
-			+ game->x_offset, new_y * game->tile_size + game->y_offset);
+		if (acces_cell(game, (t_pos){ini.x + 1, ini.y}))
+			move.x = 1;
+		else if (acces_cell(game, (t_pos){ini.x, ini.y + 1}))
+			move.y = 1;
+		else if (acces_cell(game, (t_pos){ini.x, ini.y - 1}))
+			move.y = -1;
+		else if (acces_cell(game, (t_pos){ini.x - 1, ini.y}))
+			move.x = -1;
 	}
+	return (move);
 }
 
-void move_ghosts(t_game *game, int num_ghosts, int current_time)
+void	move_ghost(t_game *game, t_ghost *ghost)
 {
-	int	index;
+	t_pos	old_pos;
+	t_pos	new_pos;
+	int		draw_x;
+	int		draw_y;
+
+	old_pos = ghost->pos;
+	new_pos = best_move(game, old_pos, game->pacman->pos);
+	new_pos = ft_pos_add(old_pos, new_pos);
+	mlx_set_instance_depth(&ghost->image->instances[0], -1);
+	game->map[old_pos.y][old_pos.x].is_ghost = 0;
+	game->map[new_pos.y][new_pos.x].is_ghost = 1;
+	draw_x = game->x_offset + new_pos.x * game->tile_size;
+	draw_y = game->y_offset + new_pos.y * game->tile_size;
+	ghost->image->instances[0].x = draw_x;
+	ghost->image->instances[0].y = draw_y;
+	mlx_set_instance_depth(&ghost->image->instances[0], 0);
+	ghost->pos = new_pos;
+}
+
+void	move_ghosts(t_game *game, int current_time)
+{
+	int		index;
+	t_ghost	*ghost;
 
 	index = -1;
-    while (game-ghosts[++index])
-    {
+	while (game->ghosts[++index])
+	{
+		ghost = game->ghosts[index];
 		if (ghost->state == WAITING && current_time >= ghost->delay)
-			game->ghost[index].state = ACTIVE;
-        if (ghosts[index]->state == ACTIVE)
-            move_ghost(game, game->ghosts[index], current_time);
-    }
+			ghost->state = ACTIVE;
+		if (ghost->state == ACTIVE)
+		{
+			move_ghost(game, ghost);
+			ghost->delay = current_time + 50;
+			ghost->state = WAITING;
+		}
+	}
 }
 
-void	game_loop(t_game *game)
+void	game_loop(void *param)
 {
-	int current_time;
+	t_game	*game;
 
-	current_time = 0;
-	while (game->running)
-	{
-		///handle_pacman(game);
-		move_ghosts(game, game->ghosts, game->num_ghosts, current_time);
-		current_time += 5;
-	}
+	game = (t_game *)param;
+	if (game->running)
+		move_ghosts(game, game->timer++);
 }

@@ -16,7 +16,7 @@
 
 NAME = so_long
 
-SRCS = main.c game_utils.c map.c pacman.c pacman_moves.c ghost.c screen_utils.c
+SRCS = main.c game_utils.c map.c pacman.c pacman_moves.c ghost.c ghosts_move.c screen_utils.c
 OBJ = $(SRCS:.c=.o)
 
 LIB_DIR = libft/
@@ -31,18 +31,19 @@ CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) -I $(MLX42_INC)
 
 LDFLAGS = -L$(LIB_DIR) -lft -L$(MLX42_DIR)/build -lmlx42 -ldl -lglfw -lm -lpthread
 
-RESOURCES_WWW = "https://drive.google.com/uc?export=download&id=1fUfL2GhSGRLVCnpXsm_pUwFXT1rwhXTW"
+ID_FILE = "1fUfL2GhSGRLVCnpXsm_pUwFXT1rwhXTW"
+RESOURCES_WWW = "https://drive.google.com/uc?export=download&id=$(ID_FILE)"
 
 # **************************************************************************** #
 #                                 RULES                                        #
 # **************************************************************************** #
 
-all: $(LIBFT) $(MLX42_LIB) $(NAME) download_resources
+all: $(LIBFT) $(MLX42_LIB) $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) $(MLX42_LIB)
 	$(CC) $(CFLAGS) $(OBJ) $(LDFLAGS) -o $(NAME)
 
-%.o: %.c
+%.o: %.c so_long.h	Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):

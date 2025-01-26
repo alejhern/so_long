@@ -21,12 +21,6 @@
 # define TILE_SIZE 32
 # define MIN_TILE_SIZE 10
 
-typedef struct s_pos
-{
-	int				x;
-	int				y;
-}					t_pos;
-
 typedef struct s_cell
 {
 	char			key;
@@ -83,8 +77,9 @@ typedef struct s_game
 	int				tile_size;
 	int				x_offset;
 	int				y_offset;
-	int				runing;
+	int				running;
 	int				count_move;
+	int				timer;
 	mlx_texture_t	**map_textures;
 	t_pacman		*pacman;
 	t_ghost			**ghosts;
@@ -108,8 +103,11 @@ void				free_pacman(mlx_t *mlx, t_pacman *pacman);
 t_pacman			*create_pacman(t_game *game);
 
 // Declarations of pacman_move.c
+int					acces_cell(t_game *game, t_pos pos);
 void				key_handler(mlx_key_data_t keydata, void *param);
 
+// Declarations from ghosts_move.c
+void				game_loop(void *param);
 // Declarations from ghost.c
 void				free_ghosts(mlx_t *mlx, t_ghost **ghost);
 t_ghost				**create_ghosts(t_game *game, int num_ghosts);
