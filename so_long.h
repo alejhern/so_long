@@ -58,6 +58,7 @@ typedef struct s_pacman
 	int				lives;
 	int				is_dead;
 	char			direction;
+	int				is_power_up;
 	mlx_texture_t	**alive;
 	mlx_texture_t	**dead;
 }					t_pacman;

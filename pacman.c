@@ -37,6 +37,7 @@ static void	new_pacman_constructor(t_pacman *pacman)
 	pacman->key_in_map = 'P';
 	pacman->lives = 3;
 	pacman->direction = 'R';
+	pacman->is_power_up = 0;
 	pacman->is_dead = false;
 	pacman->alive = NULL;
 	pacman->dead = NULL;
