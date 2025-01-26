@@ -6,7 +6,7 @@
 #    By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 19:56:30 by amhernandez       #+#    #+#              #
-#    Updated: 2025/01/14 19:56:40 by amhernandez      ###   ########.fr        #
+#    Updated: 2025/01/26 07:56:09 by alejhern         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@
 
 NAME = so_long
 
-SRCS = main.c game_utils.c map.c pacman.c ghost.c screen_utils.c
+SRCS = main.c game_utils.c map.c pacman.c pacman_moves.c ghost.c screen_utils.c
 OBJ = $(SRCS:.c=.o)
 
 LIB_DIR = libft/
