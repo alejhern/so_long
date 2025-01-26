@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 20:07:13 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/01/25 03:04:06 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/01/26 03:50:00 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static void	new_pacman_constructor(t_pacman *pacman)
 {
 	pacman->key_in_map = 'P';
 	pacman->lives = 3;
-	pacman->speed = 1;
 	pacman->direction = 'R';
 	pacman->is_dead = false;
 	pacman->alive = NULL;
