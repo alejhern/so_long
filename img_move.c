@@ -49,7 +49,7 @@ static t_pos	best_move(t_game *game, t_ghost *gh, t_pos ini, t_pos obj)
 	return (move);
 }
 
-static void	move_ghost(t_game *game, t_ghost *ghost)
+static void	move_ghost(t_game *game, t_ghost *ghost, int gh_id)
 {
 	t_pos	old_pos;
 	t_pos	new_pos;
@@ -61,7 +61,10 @@ static void	move_ghost(t_game *game, t_ghost *ghost)
 	new_pos = ft_pos_add(old_pos, new_pos);
 	mlx_set_instance_depth(&ghost->image->instances[0], -1);
 	game->map[old_pos.y][old_pos.x].is_ghost = 0;
-	game->map[new_pos.y][new_pos.x].is_ghost = 1;
+	if (ghost->state != DEAD)
+		game->map[new_pos.y][new_pos.x].is_ghost = gh_id;
+	else
+		game->map[new_pos.y][new_pos.x].is_ghost = 0;
 	draw_x = game->x_offset + new_pos.x * game->tile_size;
 	draw_y = game->y_offset + new_pos.y * game->tile_size;
 	ghost->image->instances[0].x = draw_x;
@@ -82,6 +85,7 @@ void	move_pacman(t_game *game, t_pos pos)
 	new_pos = ft_pos_add(old_pos, pos);
 	if (acces_cell(game, NULL, new_pos))
 	{
+		render_pacman(game, game->pacman);
 		mlx_set_instance_depth(&game->pacman->image->instances[0], -1);
 		game->map[old_pos.y][old_pos.x].is_pacman = 0;
 		if (game->map[new_pos.y][new_pos.x].is_pill
@@ -111,9 +115,9 @@ void	move_ghosts(t_game *game, int current_time)
 			ghost->state = ACTIVE;
 		else if (current_time < ghost->delay)
 			continue ;
-		if (ghost->state == ACTIVE)
+		if (ghost->state != WAITING)
 		{
-			move_ghost(game, ghost);
+			move_ghost(game, ghost, index + 1);
 			ghost->delay = current_time + 50;
 		}
 	}
