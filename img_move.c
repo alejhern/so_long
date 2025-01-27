@@ -74,6 +74,32 @@ static void	move_ghost(t_game *game, t_ghost *ghost, int gh_id)
 	ghost->prev_pos = old_pos;
 }
 
+void	move_ghosts(void *param)
+{
+	t_game	*game;
+	int		index;
+	t_ghost	*ghost;
+
+	game = (t_game *)param;
+	if (!game->running)
+		return ;
+	game->timer++;
+	index = -1;
+	while (game->ghosts[++index])
+	{
+		ghost = game->ghosts[index];
+		if (ghost->state == WAITING && game->timer >= ghost->delay)
+			ghost->state = ACTIVE;
+		else if (game->timer < ghost->delay)
+			continue ;
+		if (ghost->state != WAITING)
+		{
+			move_ghost(game, ghost, index + 1);
+			ghost->delay = game->timer + 50;
+		}
+	}
+}
+
 void	move_pacman(t_game *game, t_pos pos)
 {
 	t_pos	new_pos;
@@ -99,26 +125,5 @@ void	move_pacman(t_game *game, t_pos pos)
 		mlx_set_instance_depth(&game->pacman->image->instances[0], 0);
 		game->pacman->pos = new_pos;
 		ft_printf("MOVE COUNT --> %d\n", ++game->count_move);
-	}
-}
-
-void	move_ghosts(t_game *game, int current_time)
-{
-	int		index;
-	t_ghost	*ghost;
-
-	index = -1;
-	while (game->ghosts[++index])
-	{
-		ghost = game->ghosts[index];
-		if (ghost->state == WAITING && current_time >= ghost->delay)
-			ghost->state = ACTIVE;
-		else if (current_time < ghost->delay)
-			continue ;
-		if (ghost->state != WAITING)
-		{
-			move_ghost(game, ghost, index + 1);
-			ghost->delay = current_time + 50;
-		}
 	}
 }

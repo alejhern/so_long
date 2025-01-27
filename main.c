@@ -12,10 +12,39 @@
 
 #include "so_long.h"
 
-void	init_game(t_game *game)
+static void	new_game_constructor(t_game *game)
+{
+	game->rows = 0;
+	game->cols = 0;
+	game->tile_size = TILE_SIZE;
+	game->x_offset = 0;
+	game->y_offset = 0;
+	game->running = false;
+	game->count_move = 0;
+	game->timer = 0;
+	game->pacman_timer = 0;
+	game->score = 0;
+	game->frame = 0;
+	game->map_textures = NULL;
+	game->map = NULL;
+	game->pacman = NULL;
+	game->ghosts = NULL;
+}
+
+static void	game_loop(t_game *game)
+{
+	mlx_loop_hook(game->mlx, move_ghosts, game);
+	mlx_loop_hook(game->mlx, update_pacman_state, game);
+	mlx_key_hook(game->mlx, key_handler, game);
+	// mlx_resize_hook(game->mlx, window_resize_handler, &game);
+	mlx_loop(game->mlx);
+}
+
+static void	load_game(t_game *game)
 {
 	int	fd;
 
+	new_game_constructor(game);
 	get_map(game, "sprites/map/map.ber");
 	fd = open("routes/pacman-base.txt", O_RDONLY);
 	if (fd == -1)
@@ -31,13 +60,7 @@ void	init_game(t_game *game)
 	game->pacman = create_pacman(game);
 	if (!game->pacman)
 		return ;
-	game->timer = 0;
-	game->count_move = 0;
-	game->running = false;
-	mlx_loop_hook(game->mlx, game_loop, game);
-	mlx_key_hook(game->mlx, key_handler, game);
-	// mlx_resize_hook(game.mlx, window_resize_handler, &game);
-	mlx_loop(game->mlx);
+	game_loop(game);
 }
 
 int	main(void)
@@ -47,7 +70,7 @@ int	main(void)
 	game.mlx = mlx_init(800, 600, "Pac-Man", true);
 	if (!game.mlx)
 		return (EXIT_FAILURE);
-	init_game(&game);
+	load_game(&game);
 	free_ghosts(game.mlx, game.ghosts);
 	free_pacman(game.mlx, game.pacman);
 	free_array_textures(game.map_textures);

@@ -63,8 +63,9 @@ typedef struct s_pacman
 	t_pos			pos;
 	t_pos			init_pos;
 	int				lives;
-	int				delay;
-	int				power_up_time_out;
+	int				power_up_delay;
+	int				animation_delay;
+	int				animation_sprites;
 	char			direction;
 	t_states		state;
 	mlx_texture_t	**alive;
@@ -84,19 +85,23 @@ typedef struct s_game
 	int				running;
 	int				count_move;
 	int				timer;
+	int				pacman_timer;
 	int				score;
+	int				frame;
 	mlx_texture_t	**map_textures;
 	t_pacman		*pacman;
 	t_ghost			**ghosts;
 }					t_game;
 
 // Declarations from game_events.c
-void				game_loop(void *param);
 void				key_handler(mlx_key_data_t keydata, void *param);
 
 // Declarations of img_move.c
-void				move_ghosts(t_game *game, int current_time);
+void				move_ghosts(void *param);
 void				move_pacman(t_game *game, t_pos dir);
+
+// Declarations from update_pacman.c
+void				update_pacman_state(void *param);
 
 // Declarations of pacman.c
 void				render_pacman(t_game *game, t_pacman *pacman);
@@ -105,12 +110,13 @@ t_pacman			*create_pacman(t_game *game);
 
 // Declarations from ghost.c
 void				free_ghosts(mlx_t *mlx, t_ghost **ghost);
+void				render_ghost(t_game *game, t_ghost *ghost);
 t_ghost				**create_ghosts(t_game *game, int num_ghosts);
 
 // Declarations from screen_utils.c
+void				update_tile_size(t_game *game);
 void				window_resize_handler(int32_t width, int32_t height,
 						void *param);
-void				update_tile_size(t_game *game);
 
 // Declarations from map.c
 void				render_map(t_game *game);

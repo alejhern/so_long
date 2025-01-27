@@ -18,9 +18,11 @@ static void	new_pacman_constructor(t_pacman *pacman, t_game *game)
 	pacman->init_pos = get_init_pos(game, pacman->key_in_map, 0);
 	pacman->pos = pacman->init_pos;
 	pacman->lives = 3;
-	pacman->delay = 50;
+	pacman->animation_delay = 0;
+	pacman->animation_sprites = 0;
+	pacman->power_up_delay = 0;
 	pacman->direction = 'R';
-	pacman->state = ACTIVE;
+	pacman->state = WAITING;
 	pacman->alive = NULL;
 	pacman->dead = NULL;
 	pacman->image = NULL;
@@ -38,30 +40,16 @@ void	free_pacman(mlx_t *mlx, t_pacman *pacman)
 	pacman = NULL;
 }
 
-size_t	get_array_size(void **array)
-{
-	size_t	size;
-
-	size = 0;
-	if (!array || !array[0])
-		return (0);
-	while (array[size] != NULL)
-		size++;
-	return (size);
-}
-
 void	render_pacman(t_game *game, t_pacman *pacman)
 {
 	mlx_texture_t	*texture;
 
-	if (game->running)
-	{
+	if (game->running && pacman->state != DEAD)
+		ft_rotate_array((void ***)&pacman->alive);
+	if (pacman->state == DEAD)
+		texture = pacman->dead[0];
+	else
 		texture = pacman->alive[0];
-		ft_memmove(pacman->alive, pacman->alive + 1, (sizeof(mlx_texture_t *)
-				* (ft_memlen(pacman->alive))));
-		pacman->alive[ft_memlen(pacman->alive)] = texture;
-	}
-	texture = pacman->alive[0];
 	if (pacman->image)
 		mlx_delete_image(game->mlx, pacman->image);
 	pacman->image = regenerate_sprite(game, texture, pacman->pos);

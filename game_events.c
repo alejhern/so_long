@@ -12,15 +12,6 @@
 
 #include "so_long.h"
 
-void	game_loop(void *param)
-{
-	t_game	*game;
-
-	game = (t_game *)param;
-	if (game->running)
-		move_ghosts(game, game->timer++);
-}
-
 void	key_handler(mlx_key_data_t keydata, void *param)
 {
 	t_game	*game;
@@ -28,6 +19,12 @@ void	key_handler(mlx_key_data_t keydata, void *param)
 	game = (t_game *)param;
 	if (keydata.action != MLX_PRESS)
 		return ;
+	if (game->pacman->state == DEAD)
+		return ;
+	else if (game->pacman->state == REVIVED)
+		return ;
+	else if (game->pacman->state == WAITING)
+		game->pacman->state = ACTIVE;
 	if (keydata.key == MLX_KEY_W)
 		move_pacman(game, (t_pos){0, -1});
 	else if (keydata.key == MLX_KEY_A)
