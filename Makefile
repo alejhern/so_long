@@ -16,7 +16,15 @@
 
 NAME = so_long
 
-SRCS = main.c game_utils.c map.c pacman.c pacman_moves.c ghost.c ghosts_move.c screen_utils.c
+SRCS =  screen_utils.c			\
+		game_utils.c			\
+		game_events.c			\
+		img_move.c				\
+		ghost.c					\
+		pacman.c				\
+		map.c					\
+		main.c
+
 OBJ = $(SRCS:.c=.o)
 
 LIB_DIR = libft/

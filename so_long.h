@@ -99,23 +99,24 @@ void				window_resize_handler(int32_t width, int32_t height,
 						void *param);
 void				update_tile_size(t_game *game);
 
-// Declarations of pacman.c
-void				free_pacman(mlx_t *mlx, t_pacman *pacman);
-t_pacman			*create_pacman(t_game *game);
-
-// Declarations of pacman_move.c
-int					acces_cell(t_game *game, t_ghost *ghost, t_pos pos);
-void				key_handler(mlx_key_data_t keydata, void *param);
-
-// Declarations from ghosts_move.c
-void				game_loop(void *param);
+// Declarations from map.c
+void				get_map(t_game *game, char *path);
+void				render_map(t_game *game);
 
 // Declarations from ghost.c
 void				free_ghosts(mlx_t *mlx, t_ghost **ghost);
 t_ghost				**create_ghosts(t_game *game, int num_ghosts);
 
-// Declarations from map.c
-void				get_map(t_game *game, char *path);
-void				render_map(t_game *game);
+// Declarations of pacman.c
+void				free_pacman(mlx_t *mlx, t_pacman *pacman);
+t_pacman			*create_pacman(t_game *game);
+
+// Declarations of img_move.c
+void				move_pacman(t_game *game, t_pos dir);
+void				move_ghosts(t_game *game, int current_time);
+
+// Declarations from game_events.c
+void				key_handler(mlx_key_data_t keydata, void *param);
+void				game_loop(void *param);
 
 #endif

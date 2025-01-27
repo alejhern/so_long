@@ -1,18 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ghosts_move.c                                      :+:      :+:    :+:   */
+/*   img_move.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/26 09:50:45 by alejhern          #+#    #+#             */
-/*   Updated: 2025/01/26 14:23:59 by alejhern         ###   ########.fr       */
+/*   Created: 2025/01/26 02:00:27 by alejhern          #+#    #+#             */
+/*   Updated: 2025/01/27 11:11:11 by amhernandez      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-t_pos	best_move(t_game *game, t_ghost *gh, t_pos ini, t_pos obj)
+static int	acces_cell(t_game *game, t_ghost *ghost, t_pos pos)
+{
+	if (pos.x < 0 || pos.y < 0 || pos.x >= game->cols || pos.y >= game->rows)
+		return (0);
+	if (ghost)
+		if (ft_pos_cmp(pos, ghost->prev_pos))
+			return (0);
+	return (!game->map[pos.y][pos.x].is_wall);
+}
+
+static t_pos	best_move(t_game *game, t_ghost *gh, t_pos ini, t_pos obj)
 {
 	t_pos	move;
 
@@ -39,7 +49,7 @@ t_pos	best_move(t_game *game, t_ghost *gh, t_pos ini, t_pos obj)
 	return (move);
 }
 
-void	move_ghost(t_game *game, t_ghost *ghost)
+static void	move_ghost(t_game *game, t_ghost *ghost)
 {
 	t_pos	old_pos;
 	t_pos	new_pos;
@@ -61,6 +71,33 @@ void	move_ghost(t_game *game, t_ghost *ghost)
 	ghost->prev_pos = old_pos;
 }
 
+void	move_pacman(t_game *game, t_pos pos)
+{
+	t_pos	new_pos;
+	t_pos	old_pos;
+	int		draw_x;
+	int		draw_y;
+
+	old_pos = game->pacman->pos;
+	new_pos = ft_pos_add(old_pos, pos);
+	if (acces_cell(game, NULL, new_pos))
+	{
+		mlx_set_instance_depth(&game->pacman->image->instances[0], -1);
+		game->map[old_pos.y][old_pos.x].is_pacman = 0;
+		if (game->map[new_pos.y][new_pos.x].is_pill
+			|| game->map[new_pos.y][new_pos.x].is_mega_pill)
+			mlx_delete_image(game->mlx, game->map[new_pos.y][new_pos.x].image);
+		game->map[new_pos.y][new_pos.x].is_pacman = 1;
+		draw_x = game->x_offset + new_pos.x * game->tile_size;
+		draw_y = game->y_offset + new_pos.y * game->tile_size;
+		game->pacman->image->instances[0].x = draw_x;
+		game->pacman->image->instances[0].y = draw_y;
+		mlx_set_instance_depth(&game->pacman->image->instances[0], 0);
+		game->pacman->pos = new_pos;
+		ft_printf("MOVE COUNT --> %d\n", ++game->count_move);
+	}
+}
+
 void	move_ghosts(t_game *game, int current_time)
 {
 	int		index;
@@ -72,20 +109,12 @@ void	move_ghosts(t_game *game, int current_time)
 		ghost = game->ghosts[index];
 		if (ghost->state == WAITING && current_time >= ghost->delay)
 			ghost->state = ACTIVE;
+		else if (current_time < ghost->delay)
+			continue ;
 		if (ghost->state == ACTIVE)
 		{
 			move_ghost(game, ghost);
 			ghost->delay = current_time + 50;
-			ghost->state = WAITING;
 		}
 	}
-}
-
-void	game_loop(void *param)
-{
-	t_game	*game;
-
-	game = (t_game *)param;
-	if (game->running)
-		move_ghosts(game, game->timer++);
 }
