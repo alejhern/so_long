@@ -12,87 +12,41 @@
 
 #include "so_long.h"
 
-static void	handle_ghost_collision(t_game *game, t_pacman *pacman, t_cell *cell)
+static void	handle_mega_pill(t_game *game, t_cell *cell_pacman)
 {
-	t_ghost	*ghost;
+	int	index;
 
-	ghost = game->ghosts[cell->is_ghost - 1];
-	if (pacman->state != POWER_UP && pacman->state != REVIVED)
+	cell_pacman->is_mega_pill = 0;
+	game->pacman->state = POWER_UP;
+	game->pacman->power_up_delay = game->pacman_timer + 500;
+	game->score += 50;
+	index = -1;
+	while (game->ghosts[++index])
 	{
-		pacman->state = DEAD;
-		cell->is_pacman = 0;
-		game->score -= 120;
+		if (game->ghosts[index]->state != DEAD)
+			game->ghosts[index]->state = SCARED;
 	}
-	else if (pacman->state == POWER_UP)
-	{
-		game->score += 200;
-		ghost->state = DEAD;
-		cell->is_ghost = 0;
-	}
-	game->running = false;
 }
 
 static void	manage_powe_up(t_game *game)
 {
+	int	index;
+
 	if (game->pacman->state == POWER_UP)
 	{
 		if (game->pacman_timer >= game->pacman->power_up_delay)
 		{
 			game->pacman->state = ACTIVE;
-			game->pacman->power_up_delay = game->pacman_timer + 25;
+			game->pacman->animation_delay = game->pacman_timer + 50;
+			index = -1;
+			while (game->ghosts[++index])
+				if (game->ghosts[index]->state != DEAD
+					&& game->ghosts[index]->state != WAITING)
+					game->ghosts[index]->state = ACTIVE;
 		}
 	}
 	else
 		game->pacman->power_up_delay = game->pacman_timer + 50;
-}
-
-static void	handle_death_animation(t_game *game)
-{
-	if (game->pacman->animation_sprites == 0)
-	{
-		game->pacman->animation_sprites = ft_memlen(game->pacman->dead);
-		game->pacman->animation_delay = game->pacman_timer + 10;
-	}
-	if (game->pacman_timer >= game->pacman->animation_delay)
-	{
-		ft_rotate_array((void ***)&game->pacman->dead);
-		render_pacman(game, game->pacman);
-		game->pacman->animation_sprites--;
-		game->pacman->animation_delay = game->pacman_timer + 10;
-	}
-	if (game->pacman->animation_sprites == 0)
-	{
-		mlx_delete_image(game->mlx, game->pacman->image);
-		game->pacman->pos = game->pacman->init_pos;
-		game->pacman->state = REVIVED;
-		game->pacman->animation_sprites = 0;
-		game->pacman->animation_delay = 0;
-	}
-}
-
-static void	handle_revive_animation(t_game *game)
-{
-	if (game->pacman->animation_sprites == 0)
-	{
-		game->pacman->animation_sprites = ft_memlen(game->pacman->dead);
-		game->pacman->animation_delay = game->pacman_timer + 10;
-	}
-	if (game->pacman_timer >= game->pacman->animation_delay)
-	{
-		game->pacman->state = DEAD;
-		ft_rotate_rev_array((void ***)&game->pacman->dead);
-		render_pacman(game, game->pacman);
-		game->pacman->state = REVIVED;
-		game->pacman->animation_sprites--;
-		game->pacman->animation_delay = game->pacman_timer + 10;
-	}
-	if (game->pacman->animation_sprites == 0)
-	{
-		game->pacman->state = WAITING;
-		game->pacman->animation_sprites = 0;
-		game->pacman->pos = game->pacman->init_pos;
-		render_pacman(game, game->pacman);
-	}
 }
 
 void	update_pacman_state(void *param)
@@ -101,25 +55,23 @@ void	update_pacman_state(void *param)
 	t_cell	*cell_pacman;
 
 	game = (t_game *)param;
+	if (game->pacman->state == WAITING)
+		return ;
 	game->pacman_timer++;
 	if (game->pacman->state == DEAD)
-		handle_death_animation(game);
+		kill_pacman(game);
 	else if (game->pacman->state == REVIVED)
-		handle_revive_animation(game);
+		revive_pacman(game);
 	else
 	{
 		cell_pacman = &game->map[game->pacman->pos.y][game->pacman->pos.x];
 		if (cell_pacman->is_pill)
-			cell_pacman->is_pill = 0;
-		else if (cell_pacman->is_mega_pill)
 		{
-			cell_pacman->is_mega_pill = 0;
-			game->pacman->state = POWER_UP;
-			game->pacman->power_up_delay = game->pacman_timer + 500;
-			game->score += 50;
+			cell_pacman->is_pill = 0;
+			game->score += 10;
 		}
-		else if (cell_pacman->is_ghost)
-			handle_ghost_collision(game, game->pacman, cell_pacman);
+		else if (cell_pacman->is_mega_pill)
+			handle_mega_pill(game, cell_pacman);
 		manage_powe_up(game);
 	}
 }

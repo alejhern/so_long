@@ -23,6 +23,7 @@ static void	new_game_constructor(t_game *game)
 	game->count_move = 0;
 	game->timer = 0;
 	game->pacman_timer = 0;
+	game->ghost_timer = 0;
 	game->score = 0;
 	game->frame = 0;
 	game->map_textures = NULL;
@@ -35,6 +36,8 @@ static void	game_loop(t_game *game)
 {
 	mlx_loop_hook(game->mlx, move_ghosts, game);
 	mlx_loop_hook(game->mlx, update_pacman_state, game);
+	mlx_loop_hook(game->mlx, ghost_pacman_collision, game);
+	mlx_loop_hook(game->mlx, ghost_ghost_collision, game);
 	mlx_key_hook(game->mlx, key_handler, game);
 	// mlx_resize_hook(game->mlx, window_resize_handler, &game);
 	mlx_loop(game->mlx);

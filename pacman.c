@@ -21,7 +21,7 @@ static void	new_pacman_constructor(t_pacman *pacman, t_game *game)
 	pacman->animation_delay = 0;
 	pacman->animation_sprites = 0;
 	pacman->power_up_delay = 0;
-	pacman->direction = 'R';
+	pacman->dir = LEFT;
 	pacman->state = WAITING;
 	pacman->alive = NULL;
 	pacman->dead = NULL;

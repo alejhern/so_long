@@ -42,6 +42,14 @@ typedef enum e_state
 	POWER_UP
 }					t_states;
 
+typedef enum e_dir
+{
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN
+}					t_dir;
+
 typedef struct s_ghost
 {
 	char			key_in_map;
@@ -49,7 +57,7 @@ typedef struct s_ghost
 	t_pos			init_pos;
 	t_pos			prev_pos;
 	int				delay;
-	char			direction;
+	t_dir			dir;
 	t_states		state;
 	mlx_texture_t	**ghost;
 	mlx_texture_t	**scared;
@@ -66,7 +74,7 @@ typedef struct s_pacman
 	int				power_up_delay;
 	int				animation_delay;
 	int				animation_sprites;
-	char			direction;
+	t_dir			dir;
 	t_states		state;
 	mlx_texture_t	**alive;
 	mlx_texture_t	**dead;
@@ -86,6 +94,7 @@ typedef struct s_game
 	int				count_move;
 	int				timer;
 	int				pacman_timer;
+	int				ghost_timer;
 	int				score;
 	int				frame;
 	mlx_texture_t	**map_textures;
@@ -94,6 +103,10 @@ typedef struct s_game
 }					t_game;
 
 // Declarations from game_events.c
+void				kill_pacman(t_game *game);
+void				revive_pacman(t_game *game);
+void				ghost_pacman_collision(void *param);
+void				ghost_ghost_collision(void *param);
 void				key_handler(mlx_key_data_t keydata, void *param);
 
 // Declarations of img_move.c

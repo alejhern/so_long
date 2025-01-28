@@ -20,7 +20,7 @@ static void	new_ghost_constructor(t_ghost *ghost, t_game *game, int index)
 	ghost->prev_pos = ghost->init_pos;
 	ghost->delay = 300 * (index + 1);
 	ghost->state = WAITING;
-	ghost->direction = 'R';
+	ghost->dir = UP;
 	ghost->ghost = NULL;
 	ghost->dead = NULL;
 	ghost->scared = NULL;
@@ -71,7 +71,23 @@ void	render_ghost(t_game *game, t_ghost *ghost)
 {
 	mlx_texture_t	*texture;
 
-	texture = ghost->ghost[0];
+	if (game->running && ghost->state == ACTIVE)
+	{
+		ft_rotate_array((void ***)&ghost->ghost);
+		texture = ghost->ghost[0];
+	}
+	else if (game->running && ghost->state == SCARED)
+	{
+		ft_rotate_array((void ***)&ghost->scared);
+		texture = ghost->scared[0];
+	}
+	else if (game->running && ghost->state == DEAD)
+	{
+		ft_rotate_array((void ***)&ghost->dead);
+		texture = ghost->dead[0];
+	}
+	else
+		texture = ghost->ghost[0];
 	if (ghost->image)
 		mlx_delete_image(game->mlx, ghost->image);
 	ghost->image = regenerate_sprite(game, texture, ghost->pos);

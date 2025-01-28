@@ -94,6 +94,7 @@ void	move_ghosts(void *param)
 			continue ;
 		if (ghost->state != WAITING)
 		{
+			render_ghost(game, ghost);
 			move_ghost(game, ghost, index + 1);
 			ghost->delay = game->timer + 50;
 		}
