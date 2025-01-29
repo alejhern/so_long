@@ -18,7 +18,7 @@ static void	new_pacman_constructor(t_pacman *pacman, t_game *game)
 	pacman->init_pos = get_init_pos(game, pacman->key_in_map, 0);
 	pacman->pos = pacman->init_pos;
 	pacman->lives = 3;
-	pacman->animation_delay = 0;
+	pacman->delay = 50;
 	pacman->animation_sprites = 0;
 	pacman->power_up_delay = 0;
 	pacman->dir = LEFT;
@@ -32,8 +32,10 @@ void	free_pacman(mlx_t *mlx, t_pacman *pacman)
 {
 	if (!pacman)
 		return ;
-	free_array_textures(pacman->alive);
-	free_array_textures(pacman->dead);
+	ft_free_func_array((void ***)&pacman->alive,
+		(void (*)(void *))mlx_delete_texture);
+	ft_free_func_array((void ***)&pacman->dead,
+		(void (*)(void *))mlx_delete_texture);
 	if (pacman->image)
 		mlx_delete_image(mlx, pacman->image);
 	free(pacman);

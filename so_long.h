@@ -72,7 +72,7 @@ typedef struct s_pacman
 	t_pos			init_pos;
 	int				lives;
 	int				power_up_delay;
-	int				animation_delay;
+	int				delay;
 	int				animation_sprites;
 	t_dir			dir;
 	t_states		state;
@@ -105,16 +105,16 @@ typedef struct s_game
 // Declarations from game_events.c
 void				kill_pacman(t_game *game);
 void				revive_pacman(t_game *game);
-void				ghost_pacman_collision(void *param);
-void				ghost_ghost_collision(void *param);
+void				ghost_pacman_collision(t_game *game);
+void				ghost_ghost_collision(t_game *game);
 void				key_handler(mlx_key_data_t keydata, void *param);
 
 // Declarations of img_move.c
-void				move_ghosts(void *param);
-void				move_pacman(t_game *game, t_pos dir);
+void				move_ghosts(t_game *game);
+void				move_pacman(t_game *game);
 
 // Declarations from update_pacman.c
-void				update_pacman_state(void *param);
+void				update_pacman_state(t_game *game);
 
 // Declarations of pacman.c
 void				render_pacman(t_game *game, t_pacman *pacman);
@@ -136,11 +136,11 @@ void				render_map(t_game *game);
 void				get_map(t_game *game, char *path);
 
 // Declarations from game_utils.c
+t_pos				get_direction_offset(t_dir dir);
 void				clear_images(t_game *game);
 mlx_image_t			*regenerate_sprite(t_game *game, mlx_texture_t *texture,
 						t_pos pos);
-t_pos				get_init_pos(t_game *game, char key_in_map, int ignore);
 mlx_texture_t		**get_sprites(int fd, int limit);
-void				free_array_textures(mlx_texture_t **texture);
+t_pos				get_init_pos(t_game *game, char key_in_map, int ignore);
 
 #endif

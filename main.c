@@ -32,15 +32,17 @@ static void	new_game_constructor(t_game *game)
 	game->ghosts = NULL;
 }
 
-static void	game_loop(t_game *game)
+static void	game_update(void *param)
 {
-	mlx_loop_hook(game->mlx, move_ghosts, game);
-	mlx_loop_hook(game->mlx, update_pacman_state, game);
-	mlx_loop_hook(game->mlx, ghost_pacman_collision, game);
-	mlx_loop_hook(game->mlx, ghost_ghost_collision, game);
-	mlx_key_hook(game->mlx, key_handler, game);
-	// mlx_resize_hook(game->mlx, window_resize_handler, &game);
-	mlx_loop(game->mlx);
+	t_game	*game;
+
+	game = (t_game *)param;
+	move_ghosts(game);
+	move_pacman(game);
+	update_pacman_state(game);
+	// update_ghosts_state(game);
+	ghost_ghost_collision(game);
+	ghost_pacman_collision(game);
 }
 
 static void	load_game(t_game *game)
@@ -63,7 +65,10 @@ static void	load_game(t_game *game)
 	game->pacman = create_pacman(game);
 	if (!game->pacman)
 		return ;
-	game_loop(game);
+	mlx_loop_hook(game->mlx, game_update, game);
+	mlx_key_hook(game->mlx, key_handler, game);
+	// mlx_resize_hook(game->mlx, window_resize_handler, &game);
+	mlx_loop(game->mlx);
 }
 
 int	main(void)
@@ -76,7 +81,8 @@ int	main(void)
 	load_game(&game);
 	free_ghosts(game.mlx, game.ghosts);
 	free_pacman(game.mlx, game.pacman);
-	free_array_textures(game.map_textures);
+	ft_free_func_array((void ***)&game.map_textures,
+		(void (*)(void *))mlx_delete_texture);
 	clear_images(&game);
 	ft_free_array((void ***)&game.map);
 	mlx_terminate(game.mlx);

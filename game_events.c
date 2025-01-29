@@ -17,14 +17,14 @@ void	kill_pacman(t_game *game)
 	if (game->pacman->animation_sprites == 0)
 	{
 		game->pacman->animation_sprites = ft_memlen(game->pacman->dead);
-		game->pacman->animation_delay = game->pacman_timer + 10;
+		game->pacman->delay = game->pacman_timer + 10;
 	}
-	if (game->pacman_timer >= game->pacman->animation_delay)
+	if (game->pacman_timer >= game->pacman->delay)
 	{
 		ft_rotate_array((void ***)&game->pacman->dead);
 		render_pacman(game, game->pacman);
 		game->pacman->animation_sprites--;
-		game->pacman->animation_delay = game->pacman_timer + 10;
+		game->pacman->delay = game->pacman_timer + 10;
 	}
 	if (game->pacman->animation_sprites == 0)
 	{
@@ -32,7 +32,7 @@ void	kill_pacman(t_game *game)
 		game->pacman->pos = game->pacman->init_pos;
 		game->pacman->state = REVIVED;
 		game->pacman->animation_sprites = 0;
-		game->pacman->animation_delay = 0;
+		game->pacman->delay = 0;
 	}
 }
 
@@ -41,16 +41,16 @@ void	revive_pacman(t_game *game)
 	if (game->pacman->animation_sprites == 0)
 	{
 		game->pacman->animation_sprites = ft_memlen(game->pacman->dead);
-		game->pacman->animation_delay = game->pacman_timer + 10;
+		game->pacman->delay = game->pacman_timer + 10;
 	}
-	if (game->pacman_timer >= game->pacman->animation_delay)
+	if (game->pacman_timer >= game->pacman->delay)
 	{
 		game->pacman->state = DEAD;
 		ft_rotate_rev_array((void ***)&game->pacman->dead);
 		render_pacman(game, game->pacman);
 		game->pacman->state = REVIVED;
 		game->pacman->animation_sprites--;
-		game->pacman->animation_delay = game->pacman_timer + 10;
+		game->pacman->delay = game->pacman_timer + 10;
 	}
 	if (game->pacman->animation_sprites == 0)
 	{
@@ -61,41 +61,39 @@ void	revive_pacman(t_game *game)
 	}
 }
 
-void	ghost_ghost_collision(void *param)
+void	ghost_ghost_collision(t_game *game)
 {
-	t_game	*game;
-	int		index;
-	int		index2;
+	t_ghost	**gh_iters[2];
 
-	game = (t_game *)param;
-	if (!game->running)
-		return ;
-	index = -1;
-	while (game->ghosts[++index])
+	gh_iters[0] = game->ghosts;
+	while (*gh_iters[0])
 	{
-		if (game->ghosts[index]->state == DEAD)
-			continue ;
-		index2 = index;
-		while (game->ghosts[++index2])
+		if ((*gh_iters[0])->state == DEAD || (*gh_iters[0])->state == WAITING)
 		{
-			if (game->ghosts[index2]->state == DEAD)
+			gh_iters[0]++;
+			continue ;
+		}
+		gh_iters[1] = gh_iters[0];
+		while (*++gh_iters[1])
+		{
+			if ((*gh_iters[1])->state == DEAD
+				|| (*gh_iters[1])->state == WAITING)
 				continue ;
-			if (ft_pos_distance(game->ghosts[index]->pos,
-					game->ghosts[index2]->pos) == 1)
+			if (ft_pos_distance((*gh_iters[0])->pos, (*gh_iters[1])->pos) == 1
+				&& (((*gh_iters[0])->dir + (*gh_iters[1])->dir) % 2))
 			{
-				game->ghosts[index]->dir = (game->ghosts[index]->dir + 2) % 4;
-				game->ghosts[index2]->dir = (game->ghosts[index2]->dir + 2) % 4;
+				(*gh_iters[0])->dir = ((*gh_iters[0])->dir + 2) % 4;
+				(*gh_iters[1])->dir = ((*gh_iters[1])->dir + 2) % 4;
 			}
 		}
+		gh_iters[0]++;
 	}
 }
 
-void	ghost_pacman_collision(void *param)
+void	ghost_pacman_collision(t_game *game)
 {
-	t_game	*game;
-	int		index;
+	int	index;
 
-	game = (t_game *)param;
 	index = -1;
 	while (game->ghosts[++index])
 	{
@@ -133,14 +131,16 @@ void	key_handler(mlx_key_data_t keydata, void *param)
 	else if (game->pacman->state == WAITING)
 		game->pacman->state = ACTIVE;
 	if (keydata.key == MLX_KEY_W)
-		move_pacman(game, (t_pos){0, -1});
+		game->pacman->dir = UP;
 	else if (keydata.key == MLX_KEY_A)
-		move_pacman(game, (t_pos){-1, 0});
+		game->pacman->dir = LEFT;
 	else if (keydata.key == MLX_KEY_S)
-		move_pacman(game, (t_pos){0, 1});
+		game->pacman->dir = DOWN;
 	else if (keydata.key == MLX_KEY_D)
-		move_pacman(game, (t_pos){1, 0});
+		game->pacman->dir = RIGHT;
 	else if (keydata.key == MLX_KEY_ESCAPE)
 		mlx_close_window(game->mlx);
+	if (game->pacman->state == WAITING)
+		game->pacman->state = ACTIVE;
 	game->running = true;
 }

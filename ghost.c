@@ -56,9 +56,12 @@ void	free_ghosts(mlx_t *mlx, t_ghost **ghosts)
 	index = -1;
 	while (ghosts[++index])
 	{
-		free_array_textures(ghosts[index]->ghost);
-		free_array_textures(ghosts[index]->dead);
-		free_array_textures(ghosts[index]->scared);
+		ft_free_func_array((void ***)&ghosts[index]->ghost,
+			(void (*)(void *))mlx_delete_texture);
+		ft_free_func_array((void ***)&ghosts[index]->dead,
+			(void (*)(void *))mlx_delete_texture);
+		ft_free_func_array((void ***)&ghosts[index]->scared,
+			(void (*)(void *))mlx_delete_texture);
 		if (ghosts[index]->image)
 			mlx_delete_image(mlx, ghosts[index]->image);
 		free(ghosts[index]);

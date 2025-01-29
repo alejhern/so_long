@@ -12,17 +12,20 @@
 
 #include "so_long.h"
 
-void	free_array_textures(mlx_texture_t **texture)
+t_pos	get_direction_offset(t_dir dir)
 {
-	int	index;
+	t_pos	offset;
 
-	if (!texture)
-		return ;
-	index = -1;
-	while (texture[++index])
-		mlx_delete_texture(texture[index]);
-	free(texture);
-	texture = NULL;
+	offset = (t_pos){0, 0};
+	if (dir == LEFT)
+		offset.x = -1;
+	else if (dir == RIGHT)
+		offset.x = 1;
+	else if (dir == UP)
+		offset.y = -1;
+	else if (dir == DOWN)
+		offset.y = 1;
+	return (offset);
 }
 
 void	clear_images(t_game *game)
@@ -42,6 +45,21 @@ void	clear_images(t_game *game)
 			}
 		}
 	}
+}
+
+mlx_image_t	*regenerate_sprite(t_game *game, mlx_texture_t *texture, t_pos pos)
+{
+	mlx_image_t	*img;
+	int			draw_x;
+	int			draw_y;
+
+	img = mlx_texture_to_image(game->mlx, texture);
+	if (!img)
+		return (NULL);
+	draw_x = game->x_offset + pos.x * game->tile_size;
+	draw_y = game->y_offset + pos.y * game->tile_size;
+	mlx_image_to_window(game->mlx, img, draw_x, draw_y);
+	return (img);
 }
 
 mlx_texture_t	**get_sprites(int fd, int limit)
@@ -64,24 +82,10 @@ mlx_texture_t	**get_sprites(int fd, int limit)
 		sprites[index] = mlx_load_png(path);
 		free(path);
 		if (!sprites[index])
-			return (free_array_textures(sprites), NULL);
+			return (ft_free_func_array((void ***)&sprites,
+					(void (*)(void *))mlx_delete_texture), NULL);
 	}
 	return (sprites);
-}
-
-mlx_image_t	*regenerate_sprite(t_game *game, mlx_texture_t *texture, t_pos pos)
-{
-	mlx_image_t	*img;
-	int			draw_x;
-	int			draw_y;
-
-	img = mlx_texture_to_image(game->mlx, texture);
-	if (!img)
-		return (NULL);
-	draw_x = game->x_offset + pos.x * game->tile_size;
-	draw_y = game->y_offset + pos.y * game->tile_size;
-	mlx_image_to_window(game->mlx, img, draw_x, draw_y);
-	return (img);
 }
 
 t_pos	get_init_pos(t_game *game, char key_in_map, int ignore)
