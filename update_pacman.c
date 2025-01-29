@@ -18,8 +18,7 @@ static void	handle_mega_pill(t_game *game, t_cell *cell_pacman)
 
 	cell_pacman->is_mega_pill = 0;
 	game->pacman->state = POWER_UP;
-	game->pacman->power_up_delay = game->timer + 500;
-	game->pacman->delay = game->timer + 25;
+	game->pacman->power_up_delay = game->timer + PACMAN_POWER_UP_TIME_OUT;
 	game->score += 50;
 	index = -1;
 	while (game->ghosts[++index])
@@ -38,15 +37,12 @@ static void	manage_powe_up(t_game *game)
 		if (game->timer >= game->pacman->power_up_delay)
 		{
 			game->pacman->state = ACTIVE;
-			game->pacman->delay = game->timer + 50;
 			index = -1;
 			while (game->ghosts[++index])
 				if (game->ghosts[index]->state != DEAD
 					&& game->ghosts[index]->state != WAITING)
 					game->ghosts[index]->state = ACTIVE;
 		}
-		else
-			game->pacman->delay = game->timer + 25;
 	}
 }
 

@@ -12,7 +12,7 @@
 
 #include "so_long.h"
 
-t_pos	get_direction_offset(t_dir dir)
+t_pos	get_move(t_pos pos, t_dir dir)
 {
 	t_pos	offset;
 
@@ -25,7 +25,7 @@ t_pos	get_direction_offset(t_dir dir)
 		offset.y = -1;
 	else if (dir == DOWN)
 		offset.y = 1;
-	return (offset);
+	return (ft_pos_add(pos, offset));
 }
 
 void	clear_images(t_game *game)

@@ -12,7 +12,7 @@
 
 #include "so_long.h"
 
-static int	acces_cell(t_game *game, t_pos pos)
+int	acces_cell(t_game *game, t_pos pos)
 {
 	if (pos.x < 0 || pos.y < 0 || pos.x >= game->cols || pos.y >= game->rows)
 		return (0);
@@ -91,7 +91,7 @@ void	move_ghosts(t_game *game)
 		{
 			render_ghost(game, ghost);
 			move_ghost(game, ghost, index + 1);
-			ghost->delay = game->timer + 50;
+			ghost->delay = game->timer + GHOST_DELAY;
 		}
 	}
 }
@@ -102,8 +102,7 @@ void	move_pacman(t_game *game)
 
 	if (!game->running)
 		return ;
-	new_pos = ft_pos_add(game->pacman->pos,
-			get_direction_offset(game->pacman->dir));
+	new_pos = get_move(game->pacman->pos, game->pacman->dir);
 	if (game->timer >= game->pacman->delay && acces_cell(game, new_pos))
 	{
 		render_pacman(game, game->pacman);
@@ -120,6 +119,8 @@ void	move_pacman(t_game *game)
 		mlx_set_instance_depth(&game->pacman->image->instances[0], 0);
 		game->pacman->pos = new_pos;
 		ft_printf("MOVE COUNT --> %d\n", ++game->count_move);
-		game->pacman->delay = game->timer + 50;
+		game->pacman->delay = game->timer + PACMAN_DELAY;
+		if (game->pacman->state == POWER_UP)
+			game->pacman->delay = game->timer + 25;
 	}
 }

@@ -120,16 +120,16 @@ void	ghost_pacman_collision(t_game *game)
 void	key_handler(mlx_key_data_t keydata, void *param)
 {
 	t_game	*game;
+	t_dir	dir;
 
 	game = (t_game *)param;
 	if (keydata.action != MLX_PRESS)
 		return ;
-	if (game->pacman->state == DEAD)
-		return ;
-	else if (game->pacman->state == REVIVED)
+	if (game->pacman->state == DEAD || game->pacman->state == REVIVED)
 		return ;
 	else if (game->pacman->state == WAITING)
 		game->pacman->state = ACTIVE;
+	dir = game->pacman->dir;
 	if (keydata.key == MLX_KEY_W)
 		game->pacman->dir = UP;
 	else if (keydata.key == MLX_KEY_A)
@@ -140,7 +140,7 @@ void	key_handler(mlx_key_data_t keydata, void *param)
 		game->pacman->dir = RIGHT;
 	else if (keydata.key == MLX_KEY_ESCAPE)
 		mlx_close_window(game->mlx);
-	if (game->pacman->state == WAITING)
-		game->pacman->state = ACTIVE;
+	if (!acces_cell(game, get_move(game->pacman->pos, game->pacman->dir)))
+		game->pacman->dir = dir;
 	game->running = true;
 }

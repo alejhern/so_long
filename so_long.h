@@ -21,6 +21,12 @@
 # define TILE_SIZE 32
 # define MIN_TILE_SIZE 10
 
+# define PACMAN_DELAY 25
+# define PACMAN_POWER_UP_DELAY 10
+# define PACMAN_POWER_UP_TIME_OUT 500
+# define PACMAN_ANIMATION_DELAY 10
+# define GHOST_DELAY 25
+
 typedef struct s_cell
 {
 	char			key;
@@ -110,6 +116,7 @@ void				ghost_ghost_collision(t_game *game);
 void				key_handler(mlx_key_data_t keydata, void *param);
 
 // Declarations of img_move.c
+int					acces_cell(t_game *game, t_pos pos);
 void				move_ghosts(t_game *game);
 void				move_pacman(t_game *game);
 
@@ -136,7 +143,7 @@ void				render_map(t_game *game);
 void				get_map(t_game *game, char *path);
 
 // Declarations from game_utils.c
-t_pos				get_direction_offset(t_dir dir);
+t_pos				get_move(t_pos pos, t_dir dir);
 void				clear_images(t_game *game);
 mlx_image_t			*regenerate_sprite(t_game *game, mlx_texture_t *texture,
 						t_pos pos);
