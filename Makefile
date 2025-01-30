@@ -19,6 +19,7 @@ NAME = so_long
 SRCS =  screen_utils.c			\
 		game_utils.c			\
 		update_pacman.c			\
+		update_ghosts.c			\
 		game_events.c			\
 		img_move.c				\
 		ghost.c					\

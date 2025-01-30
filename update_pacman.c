@@ -46,27 +46,6 @@ static void	manage_powe_up(t_game *game)
 	}
 }
 
-void	update_ghosts_state(t_game *game)
-{
-	int		index;
-	t_ghost	*ghost;
-
-	if (!game->running)
-		return ;
-	index = -1;
-	while (game->ghosts[++index])
-	{
-		ghost = game->ghosts[index];
-		if (ghost->state == WAITING)
-			continue ;
-		else if (ghost->state == REVIVED)
-			ghost->state = ACTIVE;
-		else if (ghost->state == DEAD && ft_pos_cmp(ghost->pos,
-				ghost->init_pos))
-			ghost->state = REVIVED;
-	}
-}
-
 void	update_pacman_state(t_game *game)
 {
 	t_cell	*cell_pacman;

@@ -21,11 +21,12 @@
 # define TILE_SIZE 32
 # define MIN_TILE_SIZE 10
 
-# define PACMAN_DELAY 25
+# define PACMAN_DELAY 5
 # define PACMAN_POWER_UP_DELAY 10
 # define PACMAN_POWER_UP_TIME_OUT 500
 # define PACMAN_ANIMATION_DELAY 10
-# define GHOST_DELAY 25
+# define GHOST_DELAY 10
+# define GHOST_WAITING_DELAY 300
 
 typedef struct s_cell
 {
@@ -59,9 +60,11 @@ typedef enum e_dir
 typedef struct s_ghost
 {
 	char			key_in_map;
+	int				id;
 	t_pos			pos;
 	t_pos			init_pos;
 	t_pos			prev_pos;
+	t_pos			target;
 	int				delay;
 	t_dir			dir;
 	t_states		state;
@@ -116,7 +119,7 @@ void				ghost_ghost_collision(t_game *game);
 void				key_handler(mlx_key_data_t keydata, void *param);
 
 // Declarations of img_move.c
-int					acces_cell(t_game *game, t_pos pos);
+int					acces_cell(t_game *game, t_pos pos, int gh_id);
 void				move_ghosts(t_game *game);
 void				move_pacman(t_game *game);
 
@@ -127,6 +130,10 @@ void				update_pacman_state(t_game *game);
 void				render_pacman(t_game *game, t_pacman *pacman);
 void				free_pacman(mlx_t *mlx, t_pacman *pacman);
 t_pacman			*create_pacman(t_game *game);
+
+// Declarations from update_ghosts.c
+// void				update_ghost_dir(t_game *game, t_ghost *ghost);
+void				update_ghosts_state(t_game *game);
 
 // Declarations from ghost.c
 void				free_ghosts(mlx_t *mlx, t_ghost **ghost);

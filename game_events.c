@@ -56,6 +56,7 @@ void	revive_pacman(t_game *game)
 	{
 		game->pacman->state = WAITING;
 		game->pacman->animation_sprites = 0;
+		game->pacman->delay = game->timer;
 		game->pacman->pos = game->pacman->init_pos;
 		render_pacman(game, game->pacman);
 	}
@@ -140,7 +141,7 @@ void	key_handler(mlx_key_data_t keydata, void *param)
 		game->pacman->dir = RIGHT;
 	else if (keydata.key == MLX_KEY_ESCAPE)
 		mlx_close_window(game->mlx);
-	if (!acces_cell(game, get_move(game->pacman->pos, game->pacman->dir)))
+	if (!acces_cell(game, get_move(game->pacman->pos, game->pacman->dir), 0))
 		game->pacman->dir = dir;
 	game->running = true;
 }

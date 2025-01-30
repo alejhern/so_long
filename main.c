@@ -37,12 +37,12 @@ static void	game_update(void *param)
 	t_game	*game;
 
 	game = (t_game *)param;
+	ghost_ghost_collision(game);
+	update_ghosts_state(game);
 	move_ghosts(game);
 	move_pacman(game);
-	update_pacman_state(game);
-	// update_ghosts_state(game);
-	ghost_ghost_collision(game);
 	ghost_pacman_collision(game);
+	update_pacman_state(game);
 }
 
 static void	load_game(t_game *game)
@@ -65,8 +65,8 @@ static void	load_game(t_game *game)
 	game->pacman = create_pacman(game);
 	if (!game->pacman)
 		return ;
-	mlx_loop_hook(game->mlx, game_update, game);
 	mlx_key_hook(game->mlx, key_handler, game);
+	mlx_loop_hook(game->mlx, game_update, game);
 	// mlx_resize_hook(game->mlx, window_resize_handler, &game);
 	mlx_loop(game->mlx);
 }

@@ -12,38 +12,23 @@
 
 #include "so_long.h"
 
-int	acces_cell(t_game *game, t_pos pos)
+int	acces_cell(t_game *game, t_pos pos, int gh_id)
 {
+	t_pos	prev_pos;
+
 	if (pos.x < 0 || pos.y < 0 || pos.x >= game->cols || pos.y >= game->rows)
 		return (0);
-	return (!game->map[pos.y][pos.x].is_wall);
-}
-
-static t_pos	best_move(t_game *game, t_pos ini, t_pos obj)
-{
-	t_pos	move;
-
-	move = (t_pos){0, 0};
-	if (obj.y > ini.y && acces_cell(game, (t_pos){ini.x, ini.y + 1}))
-		move.y = 1;
-	else if (obj.y < ini.y && acces_cell(game, (t_pos){ini.x, ini.y - 1}))
-		move.y = -1;
-	else if (obj.x > ini.x && acces_cell(game, (t_pos){ini.x + 1, ini.y}))
-		move.x = 1;
-	else if (obj.x < ini.x && acces_cell(game, (t_pos){ini.x - 1, ini.y}))
-		move.x = -1;
-	if (move.x == 0 && move.y == 0)
+	if (gh_id--)
 	{
-		if (acces_cell(game, (t_pos){ini.x + 1, ini.y}))
-			move.x = 1;
-		else if (acces_cell(game, (t_pos){ini.x, ini.y + 1}))
-			move.y = 1;
-		else if (acces_cell(game, (t_pos){ini.x, ini.y - 1}))
-			move.y = -1;
-		else if (acces_cell(game, (t_pos){ini.x - 1, ini.y}))
-			move.x = -1;
+		prev_pos = game->ghosts[gh_id]->pos;
+		if (game->map[prev_pos.y][prev_pos.x].key == 'G'
+			&& game->map[pos.y][pos.x].key == 'G')
+			return (1);
+		else if (game->map[pos.y][pos.x].key == 'G'
+			&& game->ghosts[gh_id]->state != SCARED)
+			return (0);
 	}
-	return (move);
+	return (!game->map[pos.y][pos.x].is_wall);
 }
 
 static void	move_ghost(t_game *game, t_ghost *ghost, int gh_id)
@@ -54,8 +39,10 @@ static void	move_ghost(t_game *game, t_ghost *ghost, int gh_id)
 	int		draw_y;
 
 	old_pos = ghost->pos;
-	new_pos = best_move(game, old_pos, game->pacman->pos);
-	new_pos = ft_pos_add(old_pos, new_pos);
+	update_ghosts_state(game);
+	new_pos = get_move(ghost->pos, ghost->dir);
+	if (!acces_cell(game, new_pos, gh_id))
+		return ;
 	mlx_set_instance_depth(&ghost->image->instances[0], -1);
 	game->map[old_pos.y][old_pos.x].is_ghost = 0;
 	if (ghost->state != DEAD)
@@ -103,7 +90,7 @@ void	move_pacman(t_game *game)
 	if (!game->running)
 		return ;
 	new_pos = get_move(game->pacman->pos, game->pacman->dir);
-	if (game->timer >= game->pacman->delay && acces_cell(game, new_pos))
+	if (game->timer >= game->pacman->delay && acces_cell(game, new_pos, 0))
 	{
 		render_pacman(game, game->pacman);
 		mlx_set_instance_depth(&game->pacman->image->instances[0], -1);
