@@ -15,14 +15,13 @@
 
 # include "MLX42/MLX42.h"
 # include "libft/libft.h"
-# include <stdio.h>
-# include <stdlib.h>
+# include <math.h>
 
 # define TILE_SIZE 32
 # define MIN_TILE_SIZE 10
 
 # define PACMAN_DELAY 5
-# define PACMAN_POWER_UP_DELAY 10
+# define PACMAN_POWER_UP_DELAY 4
 # define PACMAN_POWER_UP_TIME_OUT 500
 # define PACMAN_ANIMATION_DELAY 10
 # define GHOST_DELAY 10
@@ -132,7 +131,7 @@ void				free_pacman(mlx_t *mlx, t_pacman *pacman);
 t_pacman			*create_pacman(t_game *game);
 
 // Declarations from update_ghosts.c
-// void				update_ghost_dir(t_game *game, t_ghost *ghost);
+int					get_probabilityes(t_game *game, t_ghost *ghost);
 void				update_ghosts_state(t_game *game);
 
 // Declarations from ghost.c

@@ -12,76 +12,67 @@
 
 #include "so_long.h"
 
-static t_dir	best_move(t_game *game, t_ghost *ghost)
+int	get_probabilityes(t_game *game, t_ghost *ghost)
 {
-	t_pos	pos_diff;
-	t_dir	new_dir;
-	t_dir	possibilities[4];
-	int		access_count;
-	int		dir;
+	int	dir;
+	int	count;
 
-	pos_diff = ft_pos_sub(ghost->target, ghost->pos);
-	new_dir = ghost->dir;
-	access_count = 0;
-	dir = 0;
-	while (dir < 4)
+	dir = -1;
+	count = 0;
+	while (++dir < 4)
+		if (acces_cell(game, get_move(ghost->pos, (t_dir)dir), 0))
+			count++;
+	return (count);
+}
+
+static t_dir	opposite_dir(t_dir dir)
+{
+	if (dir == UP)
+		return (DOWN);
+	if (dir == DOWN)
+		return (UP);
+	if (dir == LEFT)
+		return (RIGHT);
+	if (dir == RIGHT)
+		return (LEFT);
+	return (dir);
+}
+
+static void	update_dir(t_game *game, t_ghost *ghost)
+{
+	t_dir	possibilities[4];
+	int		access[2];
+	t_pos	new_pos;
+	double	distance;
+	double	best_distance;
+
+	access[0] = -1;
+	access[1] = 0;
+	while (++access[0] < 4)
+		if (acces_cell(game, get_move(ghost->pos, (t_dir)access[0]), ghost->id)
+			&& (t_dir)access[0] != opposite_dir(ghost->dir))
+			possibilities[access[1]++] = (t_dir)access[0];
+	best_distance = game->cols * game->rows;
+	while (--access[1] >= 0)
 	{
-		if (acces_cell(game, get_move(ghost->pos, (t_dir)dir), ghost->id))
-			possibilities[access_count++] = (t_dir)dir;
-		dir++;
-	}
-	if (access_count > 1)
-	{
-		if (ghost->dir == UP || ghost->dir == DOWN)
+		new_pos = get_move(ghost->pos, possibilities[access[1]]);
+		distance = sqrt(pow(new_pos.x - ghost->target.x, 2) + pow(new_pos.y
+					- ghost->target.y, 2));
+		if (distance < best_distance && !ft_pos_cmp(new_pos, ghost->prev_pos))
 		{
-			if (pos_diff.x > 0 && acces_cell(game, get_move(ghost->pos, RIGHT),
-					ghost->id))
-				return (RIGHT);
-			if (pos_diff.x < 0 && acces_cell(game, get_move(ghost->pos, LEFT),
-					ghost->id))
-				return (LEFT);
-		}
-		else if (ghost->dir == LEFT || ghost->dir == RIGHT)
-		{
-			if (pos_diff.y > 0 && acces_cell(game, get_move(ghost->pos, DOWN),
-					ghost->id))
-				return (DOWN);
-			if (pos_diff.y < 0 && acces_cell(game, get_move(ghost->pos, UP),
-					ghost->id))
-				return (UP);
+			best_distance = distance;
+			ghost->dir = possibilities[access[1]];
 		}
 	}
-	if (pos_diff.y == 0)
-	{
-		if (pos_diff.x > 0 && acces_cell(game, get_move(ghost->pos, RIGHT),
-				ghost->id))
-			return (RIGHT);
-		if (pos_diff.x < 0 && acces_cell(game, get_move(ghost->pos, LEFT),
-				ghost->id))
-			return (LEFT);
-	}
-	if (pos_diff.x == 0)
-	{
-		if (pos_diff.y > 0 && acces_cell(game, get_move(ghost->pos, DOWN),
-				ghost->id))
-			return (DOWN);
-		if (pos_diff.y < 0 && acces_cell(game, get_move(ghost->pos, UP),
-				ghost->id))
-			return (UP);
-	}
-	if (acces_cell(game, get_move(ghost->pos, new_dir), ghost->id))
-		return (new_dir);
-	return (possibilities[0]);
 }
 
 void	update_ghosts_state(t_game *game)
 {
-	int index;
-	t_ghost *ghost;
+	int		index;
+	t_ghost	*ghost;
 
 	if (!game->running)
 		return ;
-
 	index = -1;
 	while (game->ghosts[++index])
 	{
@@ -97,7 +88,6 @@ void	update_ghosts_state(t_game *game)
 			ghost->state = REVIVED;
 		else if (ghost->state == DEAD)
 			ghost->target = ghost->init_pos;
-
-		ghost->dir = best_move(game, ghost);
+		update_dir(game, ghost);
 	}
 }

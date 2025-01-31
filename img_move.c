@@ -21,11 +21,12 @@ int	acces_cell(t_game *game, t_pos pos, int gh_id)
 	if (gh_id--)
 	{
 		prev_pos = game->ghosts[gh_id]->pos;
-		if (game->map[prev_pos.y][prev_pos.x].key == 'G'
-			&& game->map[pos.y][pos.x].key == 'G')
+		if ((game->map[prev_pos.y][prev_pos.x].key == 'G'
+			&& game->map[pos.y][pos.x].key == 'G') || get_probabilityes(game,
+				game->ghosts[gh_id]) == 1)
 			return (1);
 		else if (game->map[pos.y][pos.x].key == 'G'
-			&& game->ghosts[gh_id]->state != SCARED)
+			&& game->ghosts[gh_id]->state != DEAD)
 			return (0);
 	}
 	return (!game->map[pos.y][pos.x].is_wall);
@@ -108,6 +109,6 @@ void	move_pacman(t_game *game)
 		ft_printf("MOVE COUNT --> %d\n", ++game->count_move);
 		game->pacman->delay = game->timer + PACMAN_DELAY;
 		if (game->pacman->state == POWER_UP)
-			game->pacman->delay = game->timer + 25;
+			game->pacman->delay = game->timer + PACMAN_POWER_UP_DELAY;
 	}
 }
