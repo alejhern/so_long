@@ -17,8 +17,6 @@ void	teleport_object(t_game *game, t_pacman *pacman, t_ghost *ghost)
 	t_cell	cell;
 	t_cell	cell2;
 
-	ft_putstr_fd("Pills: ", STDOUT_FILENO);
-	ft_putnbr_fd(game->pills, STDOUT_FILENO);
 	cell = game->map[game->exit_pos[0].y][game->exit_pos[0].x];
 	cell2 = game->map[game->exit_pos[0].y][game->exit_pos[1].x];
 	if (pacman)

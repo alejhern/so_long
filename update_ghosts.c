@@ -87,7 +87,7 @@ void	update_ghosts_state(t_game *game)
 				ghost->init_pos))
 			ghost->state = REVIVED;
 		else if (ghost->state == DEAD)
-			ghost->target = ghost->init_pos;
+			ghost->target = get_init_pos(game, 'G', 0);
 		update_dir(game, ghost);
 		if (game->map[ghost->pos.y][ghost->pos.x].is_exit)
 			teleport_object(game, NULL, ghost);
