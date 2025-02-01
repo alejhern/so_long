@@ -56,6 +56,7 @@ static void	revive_pacman(t_game *game)
 	{
 		game->pacman->state = WAITING;
 		game->pacman->animation_sprites = 0;
+		game->pacman->lives--;
 		game->pacman->delay = game->timer;
 		game->pacman->pos = game->pacman->init_pos;
 		render_pacman(game, game->pacman);

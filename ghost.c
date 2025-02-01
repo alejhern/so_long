@@ -36,14 +36,14 @@ static void	get_ghost_sprites(t_ghost *ghost, int fd_gh)
 	ghost->ghost = get_sprites(fd_gh, 2);
 	if (!ghost->ghost)
 		return ;
-	fd = open("routes/ghost-dead.txt", O_RDONLY);
+	fd = open(GHOST_DEAD, O_RDONLY);
 	if (fd == -1)
 		return ;
 	ghost->dead = get_sprites(fd, 4);
 	close(fd);
 	if (!ghost->dead)
 		return ;
-	fd = open("routes/ghost-scared.txt", O_RDONLY);
+	fd = open(GHOST_SCARED, O_RDONLY);
 	if (fd == -1)
 		return ;
 	ghost->scared = get_sprites(fd, 2);
@@ -104,7 +104,7 @@ t_ghost	**create_ghosts(t_game *game)
 	t_ghost	**ghosts;
 	int		index;
 
-	fd = open("routes/ghosts.txt", O_RDONLY);
+	fd = open(GHOSTS, O_RDONLY);
 	if (fd == -1)
 		return (NULL);
 	ghosts = ft_calloc(game->ghosts_count + 1, sizeof(t_ghost *));

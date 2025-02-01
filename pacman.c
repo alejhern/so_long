@@ -68,12 +68,12 @@ t_pacman	*create_pacman(t_game *game)
 	if (!pacman)
 		return (NULL);
 	new_pacman_constructor(pacman, game);
-	fd = open("routes/pacman-alive.txt", O_RDONLY);
+	fd = open(PACMAN_ALIVE, O_RDONLY);
 	if (fd == -1)
 		return (free_pacman(game->mlx, pacman), NULL);
 	pacman->alive = get_sprites(fd, 3);
 	close(fd);
-	fd = open("routes/pacman-dead.txt", O_RDONLY);
+	fd = open(PACMAN_DEAD, O_RDONLY);
 	if (fd == -1)
 		return (free_pacman(game->mlx, pacman), NULL);
 	pacman->dead = get_sprites(fd, 10);

@@ -20,6 +20,14 @@
 # define TILE_SIZE 32
 # define MIN_TILE_SIZE 10
 
+# define MAP_TEXTURES "routes/pacman-base.txt"
+# define PACMAN_ALIVE "routes/pacman-alive.txt"
+# define PACMAN_DEAD "routes/pacman-dead.txt"
+# define PACMAN_SCARED "routes/pacman-scared.txt"
+# define GHOSTS "routes/ghosts.txt"
+# define GHOST_DEAD "routes/ghost-dead.txt"
+# define GHOST_SCARED "routes/ghost-scared.txt"
+
 # define PACMAN_DELAY 5
 # define PACMAN_POWER_UP_DELAY 4
 # define PACMAN_POWER_UP_TIME_OUT 500
@@ -118,6 +126,7 @@ void				teleport_object(t_game *game, t_pacman *pacman,
 						t_ghost *ghost);
 void				ghost_pacman_collision(t_game *game);
 void				ghost_ghost_collision(t_game *game);
+void				finish_game(t_game *game);
 void				key_handler(mlx_key_data_t keydata, void *param);
 
 // Declarations of img_move.c

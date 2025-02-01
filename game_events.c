@@ -97,6 +97,24 @@ void	ghost_pacman_collision(t_game *game)
 	}
 }
 
+void	finish_game(t_game *game)
+{
+	t_cell	cell_pacman;
+
+	cell_pacman = game->map[game->pacman->pos.y][game->pacman->pos.x];
+	if (game->pacman->lives == 0)
+	{
+		game->running = false;
+		ft_putendl_fd("You lose!", STDOUT_FILENO);
+		mlx_close_window(game->mlx);
+	}
+	else if (game->pills == 0 && cell_pacman.is_exit)
+	{
+		ft_putendl_fd("You win!", STDOUT_FILENO);
+		game->running = false;
+	}
+}
+
 void	key_handler(mlx_key_data_t keydata, void *param)
 {
 	t_game	*game;

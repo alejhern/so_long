@@ -46,6 +46,7 @@ static void	game_update(void *param)
 	move_pacman(game);
 	ghost_pacman_collision(game);
 	update_pacman_state(game);
+	finish_game(game);
 }
 
 static void	load_game(t_game *game)
@@ -56,7 +57,7 @@ static void	load_game(t_game *game)
 	get_map(game, "sprites/map/map.ber");
 	if (!game->map)
 		return ;
-	fd = open("routes/pacman-base.txt", O_RDONLY);
+	fd = open(MAP_TEXTURES, O_RDONLY);
 	if (fd == -1)
 		return ;
 	game->map_textures = get_sprites(fd, 3);
