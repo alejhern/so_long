@@ -58,8 +58,6 @@ static void	update_essentials(t_game *game, t_cell cell, t_pos pos)
 		game->exit_pos[0] = pos;
 	else if (cell.is_exit && game->exit_pos[1].x == -1)
 		game->exit_pos[1] = pos;
-	if (cell.is_pill || cell.is_mega_pill)
-		game->pills++;
 	if (cell.is_ghost)
 		game->ghosts_count++;
 }

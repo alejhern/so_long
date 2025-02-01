@@ -63,19 +63,28 @@ static void	revive_pacman(t_game *game)
 	}
 }
 
-static void	handle_mega_pill(t_game *game, t_cell *cell_pacman)
+static void	eat_pill(t_game *game, t_cell *cell_pacman)
 {
 	int	index;
 
-	cell_pacman->is_mega_pill = 0;
-	game->pacman->state = POWER_UP;
-	game->pacman->power_up_delay = game->timer + PACMAN_POWER_UP_TIME_OUT;
-	game->score += 50;
-	index = -1;
-	while (game->ghosts[++index])
+	if (cell_pacman->is_pill)
 	{
-		if (game->ghosts[index]->state != DEAD)
-			game->ghosts[index]->state = SCARED;
+		cell_pacman->is_pill = 0;
+		game->score += 10;
+		game->pills--;
+		return ;
+	}
+	if (cell_pacman->is_mega_pill)
+	{
+		cell_pacman->is_mega_pill = 0;
+		game->pacman->state = POWER_UP;
+		game->pacman->power_up_delay = game->timer + PACMAN_POWER_UP_TIME_OUT;
+		game->score += 50;
+		game->pills--;
+		index = -1;
+		while (game->ghosts[++index])
+			if (game->ghosts[index]->state != DEAD)
+				game->ghosts[index]->state = SCARED;
 	}
 }
 
@@ -113,15 +122,9 @@ void	update_pacman_state(t_game *game)
 		if (!game->running)
 			return ;
 		cell_pacman = &game->map[game->pacman->pos.y][game->pacman->pos.x];
-		if (cell_pacman->is_pill)
-		{
-			cell_pacman->is_pill = 0;
-			game->score += 10;
-		}
-		else if (cell_pacman->is_mega_pill)
-			handle_mega_pill(game, cell_pacman);
+		eat_pill(game, cell_pacman);
 		manage_powe_up(game);
-		if (cell_pacman->is_exit)
+		if (cell_pacman->is_exit && game->pills > 0)
 			teleport_object(game, game->pacman, NULL);
 	}
 }

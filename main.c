@@ -35,18 +35,31 @@ static void	new_game_constructor(t_game *game)
 	game->ghosts = NULL;
 }
 
+void	update_move_counter(t_game *game)
+{
+	char	*nb;
+	char	*str;
+
+	nb = ft_itoa(game->count_move);
+	str = ft_strjoin("Movimientos: ", nb);
+	mlx_put_string(game->mlx, str, 30, 10);
+	free(str);
+	free(nb);
+}
+
 static void	game_update(void *param)
 {
 	t_game	*game;
 
 	game = (t_game *)param;
+	update_pacman_state(game);
+	finish_game(game);
 	ghost_ghost_collision(game);
 	update_ghosts_state(game);
 	move_ghosts(game);
 	move_pacman(game);
 	ghost_pacman_collision(game);
-	update_pacman_state(game);
-	finish_game(game);
+	update_move_counter(game);
 }
 
 static void	load_game(t_game *game)
@@ -73,7 +86,6 @@ static void	load_game(t_game *game)
 		return ;
 	mlx_key_hook(game->mlx, key_handler, game);
 	mlx_loop_hook(game->mlx, game_update, game);
-	// mlx_resize_hook(game->mlx, window_resize_handler, &game);
 	mlx_loop(game->mlx);
 }
 
@@ -81,7 +93,7 @@ int	main(void)
 {
 	t_game	game;
 
-	game.mlx = mlx_init(800, 600, "Pac-Man", true);
+	game.mlx = mlx_init(1600, 1200, "Pac-Man", true);
 	if (!game.mlx)
 		return (EXIT_FAILURE);
 	load_game(&game);

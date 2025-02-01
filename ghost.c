@@ -16,7 +16,7 @@ static void	new_ghost_constructor(t_ghost *ghost, t_game *game, int index)
 {
 	ghost->id = index;
 	ghost->key_in_map = 'G';
-	ghost->init_pos = get_init_pos(game, ghost->key_in_map, index);
+	ghost->init_pos = get_init_pos(game, ghost->key_in_map, 0);
 	ghost->pos = ghost->init_pos;
 	ghost->prev_pos = ghost->init_pos;
 	ghost->delay = GHOST_WAITING_DELAY * (index + 1);

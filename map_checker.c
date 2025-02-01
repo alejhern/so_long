@@ -64,7 +64,7 @@ static int	check_pills(char **map_str, t_game *game)
 	{
 		pos.x = -1;
 		while (++pos.x < game->cols)
-			if (map_str[pos.y][pos.x] == 'C')
+			if (map_str[pos.y][pos.x] == 'C' || map_str[pos.y][pos.x] == 'M')
 				game->pills++;
 	}
 	if (game->pills > 0)

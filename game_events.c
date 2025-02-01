@@ -17,8 +17,10 @@ void	teleport_object(t_game *game, t_pacman *pacman, t_ghost *ghost)
 	t_cell	cell;
 	t_cell	cell2;
 
-	cell = game->map[game->pacman->pos.y][game->exit_pos[0].x];
-	cell2 = game->map[game->pacman->pos.y][game->exit_pos[1].x];
+	ft_putstr_fd("Pills: ", STDOUT_FILENO);
+	ft_putnbr_fd(game->pills, STDOUT_FILENO);
+	cell = game->map[game->exit_pos[0].y][game->exit_pos[0].x];
+	cell2 = game->map[game->exit_pos[0].y][game->exit_pos[1].x];
 	if (pacman)
 	{
 		if (cell.is_pacman && !acces_cell(game, get_move(game->exit_pos[0],
@@ -31,11 +33,9 @@ void	teleport_object(t_game *game, t_pacman *pacman, t_ghost *ghost)
 	}
 	if (ghost)
 	{
-		if (cell.is_ghost && !acces_cell(game, get_move(game->exit_pos[0],
-					ghost->dir), 0))
+		if (cell.is_ghost)
 			ghost->pos = game->exit_pos[1];
-		else if (cell2.is_ghost && !acces_cell(game, get_move(game->exit_pos[1],
-					ghost->dir), 0))
+		else if (cell2.is_ghost)
 			ghost->pos = game->exit_pos[0];
 		render_ghost(game, ghost);
 	}
@@ -108,10 +108,11 @@ void	finish_game(t_game *game)
 		ft_putendl_fd("You lose!", STDOUT_FILENO);
 		mlx_close_window(game->mlx);
 	}
-	else if (game->pills == 0 && cell_pacman.is_exit)
+	if (game->pills == 0 && cell_pacman.is_exit)
 	{
 		ft_putendl_fd("You win!", STDOUT_FILENO);
 		game->running = false;
+		mlx_close_window(game->mlx);
 	}
 }
 

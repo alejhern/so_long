@@ -17,8 +17,8 @@
 # include "libft/libft.h"
 # include <math.h>
 
-# define TILE_SIZE 32
-# define MIN_TILE_SIZE 10
+# define TILE_SIZE 500
+# define MIN_TILE_SIZE 100
 
 # define MAP_TEXTURES "routes/pacman-base.txt"
 # define PACMAN_ALIVE "routes/pacman-alive.txt"
@@ -153,8 +153,6 @@ t_ghost				**create_ghosts(t_game *game);
 
 // Declarations from screen_utils.c
 void				update_tile_size(t_game *game);
-void				window_resize_handler(int32_t width, int32_t height,
-						void *param);
 
 // Declarations from map_checker.c
 int					map_checker(char **map_str, t_game *game);
