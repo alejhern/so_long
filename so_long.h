@@ -35,6 +35,7 @@ typedef struct s_cell
 	int				is_mega_pill;
 	int				is_wall;
 	int				is_ghost;
+	int				is_exit;
 	mlx_image_t		*image;
 }					t_cell;
 
@@ -100,9 +101,11 @@ typedef struct s_game
 	int				y_offset;
 	int				running;
 	int				count_move;
+	int				ghosts_count;
+	int				pills;
 	int				timer;
 	int				pacman_timer;
-	int				ghost_timer;
+	t_pos			exit_pos[2];
 	int				score;
 	int				frame;
 	mlx_texture_t	**map_textures;
@@ -111,8 +114,8 @@ typedef struct s_game
 }					t_game;
 
 // Declarations from game_events.c
-void				kill_pacman(t_game *game);
-void				revive_pacman(t_game *game);
+void				teleport_object(t_game *game, t_pacman *pacman,
+						t_ghost *ghost);
 void				ghost_pacman_collision(t_game *game);
 void				ghost_ghost_collision(t_game *game);
 void				key_handler(mlx_key_data_t keydata, void *param);
@@ -137,7 +140,7 @@ void				update_ghosts_state(t_game *game);
 // Declarations from ghost.c
 void				free_ghosts(mlx_t *mlx, t_ghost **ghost);
 void				render_ghost(t_game *game, t_ghost *ghost);
-t_ghost				**create_ghosts(t_game *game, int num_ghosts);
+t_ghost				**create_ghosts(t_game *game);
 
 // Declarations from screen_utils.c
 void				update_tile_size(t_game *game);

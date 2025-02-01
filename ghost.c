@@ -98,7 +98,7 @@ void	render_ghost(t_game *game, t_ghost *ghost)
 	ghost->image = regenerate_sprite(game, texture, ghost->pos);
 }
 
-t_ghost	**create_ghosts(t_game *game, int num_ghosts)
+t_ghost	**create_ghosts(t_game *game)
 {
 	int		fd;
 	t_ghost	**ghosts;
@@ -107,9 +107,9 @@ t_ghost	**create_ghosts(t_game *game, int num_ghosts)
 	fd = open("routes/ghosts.txt", O_RDONLY);
 	if (fd == -1)
 		return (NULL);
-	ghosts = ft_calloc(num_ghosts + 1, sizeof(t_ghost *));
+	ghosts = ft_calloc(game->ghosts_count + 1, sizeof(t_ghost *));
 	index = -1;
-	while (ghosts && ++index < num_ghosts)
+	while (ghosts && ++index < game->ghosts_count)
 	{
 		ghosts[index] = malloc(sizeof(t_ghost));
 		if (!ghosts[index])

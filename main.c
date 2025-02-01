@@ -21,11 +21,14 @@ static void	new_game_constructor(t_game *game)
 	game->y_offset = 0;
 	game->running = false;
 	game->count_move = 0;
+	game->ghosts_count = 0;
+	game->pills = 0;
 	game->timer = 0;
 	game->pacman_timer = 0;
-	game->ghost_timer = 0;
 	game->score = 0;
 	game->frame = 0;
+	game->exit_pos[0].x = -1;
+	game->exit_pos[1].x = -1;
 	game->map_textures = NULL;
 	game->map = NULL;
 	game->pacman = NULL;
@@ -59,7 +62,7 @@ static void	load_game(t_game *game)
 	if (!game->map_textures)
 		return ;
 	render_map(game);
-	game->ghosts = create_ghosts(game, 4);
+	game->ghosts = create_ghosts(game);
 	if (!game->ghosts)
 		return ;
 	game->pacman = create_pacman(game);

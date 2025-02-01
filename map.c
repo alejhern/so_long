@@ -40,6 +40,30 @@ void	render_map(t_game *game)
 	}
 }
 
+static void	new_cell_constructor(t_cell *cell, t_pos pos, char **map_str)
+{
+	cell->key = map_str[pos.y][pos.x];
+	cell->is_pacman = (map_str[pos.y][pos.x] == 'P');
+	cell->is_pill = (map_str[pos.y][pos.x] == 'C');
+	cell->is_mega_pill = (map_str[pos.y][pos.x] == 'M');
+	cell->is_wall = (map_str[pos.y][pos.x] == '1');
+	cell->is_ghost = (map_str[pos.y][pos.x] == 'G');
+	cell->is_exit = (map_str[pos.y][pos.x] == 'E');
+	cell->image = NULL;
+}
+
+static void	update_essentials(t_game *game, t_cell cell, t_pos pos)
+{
+	if (cell.is_exit && game->exit_pos[0].x == -1)
+		game->exit_pos[0] = pos;
+	else if (cell.is_exit && game->exit_pos[1].x == -1)
+		game->exit_pos[1] = pos;
+	if (cell.is_pill || cell.is_mega_pill)
+		game->pills++;
+	if (cell.is_ghost)
+		game->ghosts_count++;
+}
+
 static t_cell	**get_map_cell(t_game *game, char **map_str)
 {
 	t_pos	pos;
@@ -57,13 +81,8 @@ static t_cell	**get_map_cell(t_game *game, char **map_str)
 		pos.x = -1;
 		while (++pos.x < game->cols)
 		{
-			map[pos.y][pos.x].key = map_str[pos.y][pos.x];
-			map[pos.y][pos.x].is_pacman = (map_str[pos.y][pos.x] == 'P');
-			map[pos.y][pos.x].is_pill = (map_str[pos.y][pos.x] == 'C');
-			map[pos.y][pos.x].is_mega_pill = (map_str[pos.y][pos.x] == 'M');
-			map[pos.y][pos.x].is_wall = (map_str[pos.y][pos.x] == '1');
-			map[pos.y][pos.x].is_ghost = (map_str[pos.y][pos.x] == 'G');
-			map[pos.y][pos.x].image = NULL;
+			new_cell_constructor(&map[pos.y][pos.x], pos, map_str);
+			update_essentials(game, map[pos.y][pos.x], pos);
 		}
 	}
 	return (map);

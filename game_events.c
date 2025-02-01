@@ -12,53 +12,32 @@
 
 #include "so_long.h"
 
-void	kill_pacman(t_game *game)
+void	teleport_object(t_game *game, t_pacman *pacman, t_ghost *ghost)
 {
-	if (game->pacman->animation_sprites == 0)
-	{
-		game->pacman->animation_sprites = ft_memlen(game->pacman->dead);
-		game->pacman->delay = game->pacman_timer + 10;
-	}
-	if (game->pacman_timer >= game->pacman->delay)
-	{
-		ft_rotate_array((void ***)&game->pacman->dead);
-		render_pacman(game, game->pacman);
-		game->pacman->animation_sprites--;
-		game->pacman->delay = game->pacman_timer + 10;
-	}
-	if (game->pacman->animation_sprites == 0)
-	{
-		mlx_delete_image(game->mlx, game->pacman->image);
-		game->pacman->pos = game->pacman->init_pos;
-		game->pacman->state = REVIVED;
-		game->pacman->animation_sprites = 0;
-		game->pacman->delay = 0;
-	}
-}
+	t_cell	cell;
+	t_cell	cell2;
 
-void	revive_pacman(t_game *game)
-{
-	if (game->pacman->animation_sprites == 0)
+	cell = game->map[game->pacman->pos.y][game->exit_pos[0].x];
+	cell2 = game->map[game->pacman->pos.y][game->exit_pos[1].x];
+	if (pacman)
 	{
-		game->pacman->animation_sprites = ft_memlen(game->pacman->dead);
-		game->pacman->delay = game->pacman_timer + 10;
-	}
-	if (game->pacman_timer >= game->pacman->delay)
-	{
-		game->pacman->state = DEAD;
-		ft_rotate_rev_array((void ***)&game->pacman->dead);
+		if (cell.is_pacman && !acces_cell(game, get_move(game->exit_pos[0],
+					game->pacman->dir), 0))
+			game->pacman->pos = game->exit_pos[1];
+		else if (cell2.is_pacman && !acces_cell(game,
+				get_move(game->exit_pos[1], game->pacman->dir), 0))
+			game->pacman->pos = game->exit_pos[0];
 		render_pacman(game, game->pacman);
-		game->pacman->state = REVIVED;
-		game->pacman->animation_sprites--;
-		game->pacman->delay = game->pacman_timer + 10;
 	}
-	if (game->pacman->animation_sprites == 0)
+	if (ghost)
 	{
-		game->pacman->state = WAITING;
-		game->pacman->animation_sprites = 0;
-		game->pacman->delay = game->timer;
-		game->pacman->pos = game->pacman->init_pos;
-		render_pacman(game, game->pacman);
+		if (cell.is_ghost && !acces_cell(game, get_move(game->exit_pos[0],
+					ghost->dir), 0))
+			ghost->pos = game->exit_pos[1];
+		else if (cell2.is_ghost && !acces_cell(game, get_move(game->exit_pos[1],
+					ghost->dir), 0))
+			ghost->pos = game->exit_pos[0];
+		render_ghost(game, ghost);
 	}
 }
 
