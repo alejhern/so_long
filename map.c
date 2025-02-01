@@ -110,9 +110,8 @@ void	get_map(t_game *game, char *path)
 	close(fd);
 	map_str = ft_split(content, '\n');
 	free(content);
-	if (map_str)
-		return (game->rows = ft_memlen(map_str),
-			game->cols = ft_strlen(map_str[0]), game->map = get_map_cell(game,
-				map_str), ft_free_array((void ***)&map_str));
+	if (map_str && map_checker(map_str, game))
+		return (game->map = get_map_cell(game, map_str),
+			ft_free_array((void ***)&map_str));
 	ft_free_array((void ***)&map_str);
 }

@@ -24,6 +24,7 @@ SRCS =  screen_utils.c			\
 		img_move.c				\
 		ghost.c					\
 		pacman.c				\
+		map_checker.c			\
 		map.c					\
 		main.c
 

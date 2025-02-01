@@ -54,6 +54,8 @@ static void	load_game(t_game *game)
 
 	new_game_constructor(game);
 	get_map(game, "sprites/map/map.ber");
+	if (!game->map)
+		return ;
 	fd = open("routes/pacman-base.txt", O_RDONLY);
 	if (fd == -1)
 		return ;
@@ -86,7 +88,8 @@ int	main(void)
 	free_pacman(game.mlx, game.pacman);
 	ft_free_func_array((void ***)&game.map_textures,
 		(void (*)(void *))mlx_delete_texture);
-	clear_images(&game);
+	if (game.map)
+		clear_images(&game);
 	ft_free_array((void ***)&game.map);
 	mlx_terminate(game.mlx);
 	return (EXIT_SUCCESS);

@@ -147,6 +147,9 @@ void				update_tile_size(t_game *game);
 void				window_resize_handler(int32_t width, int32_t height,
 						void *param);
 
+// Declarations from map_checker.c
+int					map_checker(char **map_str, t_game *game);
+
 // Declarations from map.c
 void				render_map(t_game *game);
 void				get_map(t_game *game, char *path);
