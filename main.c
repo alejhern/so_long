@@ -60,6 +60,7 @@ static void	game_update(void *param)
 	move_pacman(game);
 	ghost_pacman_collision(game);
 	update_move_counter(game);
+	update_tile_size(game);
 }
 
 static void	load_game(t_game *game)
@@ -86,6 +87,7 @@ static void	load_game(t_game *game)
 		return ;
 	mlx_key_hook(game->mlx, key_handler, game);
 	mlx_loop_hook(game->mlx, game_update, game);
+	mlx_resize_hook(game->mlx, window_resize_handler, game);
 	mlx_loop(game->mlx);
 }
 

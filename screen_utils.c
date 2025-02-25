@@ -34,9 +34,16 @@ void	update_tile_size(t_game *game)
 void	window_resize_handler(int32_t width, int32_t height, void *param)
 {
 	t_game	*game;
+	t_ghost	**ghosts;
 
 	game = (t_game *)param;
 	game->mlx->width = width;
 	game->mlx->height = height;
 	update_tile_size(game);
+	clear_images(game);
+	render_map(game);
+	ghosts = game->ghosts;
+	while (*ghosts)
+		render_ghost(game, *ghosts++);
+	render_pacman(game, game->pacman);
 }
